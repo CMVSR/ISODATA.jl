@@ -4,9 +4,10 @@ struct ClusteringResult{C<:AbstractMatrix{<:AbstractFloat},D<:Real}
     assignments::Vector{Int}   # assignments (n)
     costs::Vector{D}           # cost of the assignments (n)
     counts::Vector{Int}        # number of points assigned to each cluster (k)
+    sd::C                      # standard deviation of each cluster (k) in each dimension (d)
 end
 
-const _default_θn   = Float64(0.1) 
+const _default_θn   = Float64(0.01) 
 const _default_θe   = Float64(1)
 const _default_θc   = Float64(0.5)
 const _default_L    = Integer(2)
@@ -21,7 +22,7 @@ const _default_iter = Int(10)
     # Arguments
     - `θn`:     minimum number of cluster members (as percentage)
                     *determines discarding clusters
-    - `θe`:     maximum standard deviation allowed for a cluster,
+    - `θe`:     maximum standard deviation allowed for a cluster
                     *determines splitting clusters
     - `θc`:     minimum distance between clusters, 
                     *determines lumping clusters
@@ -33,7 +34,7 @@ function base(X::AbstractMatrix{<:Real},
               θn::Float64=_default_θn,
               θe::Float64=_default_θe,
               θc::Float64=_default_θc,
-              L::Integer,
+              L::Integer=2,
               iter::Integer=_default_iter)
     d, n = size(X)
 
@@ -41,11 +42,12 @@ function base(X::AbstractMatrix{<:Real},
     centers = randomcenters(X, k)
     assignments = Vector{Int}(undef, n)
     counts = Vector{Int}(undef, k)
+
     dist = pairwise(Euclidean(), centers, X, dims=2)
     D = eltype(dist)
+
     costs = Vector{D}(undef, n)
-    AVEDIST = Vector{Float64}(undef, k)
-    AD = Float64(undef)
+    sd = Array{D}(undef, d, k)
     
     for i = 1:iter
         # compute number of clusters
@@ -54,31 +56,48 @@ function base(X::AbstractMatrix{<:Real},
         # assign cluster members
         update_assignments!(dist, assignments, costs, counts)
         update_centers!(X, assignments, centers, counts)
+
         dist = pairwise(Euclidean(), centers, X, dims=2)
-        update_avedist!(AVEDIST, AD, dist, centers, assignments)
+        AVEDIST = Vector{Float64}(undef, NROWS)
+        AD = Float64(0)
+        AD = update_avedist!(AVEDIST, AD, assignments, costs, counts)
 
         # compute std dev of each component in each cluster
         sd = Array{D}(undef, d, NROWS)
-        update_sd(X, assignments, centers, counts, sd)
+        update_sd!(X, assignments, centers, counts, sd)
     
         # discard small clusters
-        discard_clusters(X, centers, counts, θn)
+        discard_clusters!(X, centers, counts, θn)
 
         # split or lump
         if mod(i, 2) != 0 || i == iter
-            lump_clusters(centers, counts, assignments, L, θc)
+            lump_clusters!(centers, counts, L, θc)
         elseif mod(i, 2) == 0
-            split_clusters(centers, counts, assignments, sd, k, AD, θn, θe)
+            split_clusters!(X, centers, counts, sd, k, AVEDIST, AD, θn, θe)
+        end
     end
 
-    return ClusteringResult(centers, assignments, costs, counts)
+    return ClusteringResult(centers, assignments, costs, counts, sd)
 end
 
+"""
+    update_assignments!(dist, assignments, costs, counts) -> None
+
+    Update `assignments` in place using `dist`. Also updates `costs`
+    and `counts`.
+
+    # Arguments
+    -        `dist`: array of the distance of each point to each cluster
+    - `assignments`: vector of length `n` with the assigned cluster
+    -       `costs`: vector with the cost to assign data point `i` to
+                        the nearest cluster center
+    -      `counts`: array of the number of patterns assigned to each cluster
+"""
 function update_assignments!(
-        dist::Matrix{<:Real},
-        assignments::Vector{Int},
-        costs::Vector{<:Real},
-        counts::Vector{Int})
+        dist::Matrix{<:Real},       # in
+        assignments::Vector{Int},   # out
+        costs::Vector{<:Real},      # out
+        counts::Vector{Int})        # out
     k, n = size(dist)
 
     fill!(counts, 0)
@@ -92,11 +111,22 @@ function update_assignments!(
     end
 end
 
+"""
+    update_centers!(X, assignments, centers, counts) -> None
+
+    Calculate new means and update `centers` in place using `assignments`.
+
+    # Arguments
+    -           `X`: array of the distance of each point to each cluster
+    - `assignments`: vector of length `n` with the assigned cluster
+    -     `centers`: array of cluster centers
+    -      `counts`: array of the number of patterns assigned to each cluster
+"""
 function update_centers!(
-        X::AbstractMatrix{<:Real},
-        assignments::Vector{Int},
-        centers::AbstractMatrix{<:AbstractFloat},
-        counts::Vector{Int})
+        X::AbstractMatrix{<:Real},                  # in
+        assignments::Vector{Int},                   # in
+        centers::AbstractMatrix{<:AbstractFloat},   # out
+        counts::Vector{Int})                        # in
     d, n = size(X)
     k = size(centers, 2)
 
@@ -120,25 +150,58 @@ function update_centers!(
     end
 end
 
-function update_avedist!(
-        AVEDIST::Vector{Float64},
-        AD::Float64,
-        costs::Vector{<:Real},
-        counts::Vector{Int})
-    k = size(counts, 2)
+"""
+    update_avedist!(AVEDIST, AD, assignments, costs, counts) -> Float64
 
-    fill!(AVEDIST, 0)
-    AD = 0
+    Calculate the average distance (AVEDIST) of each cluster to each of it's member
+    patterns and the overall average distance (AD) of clusters to their members.
+
+    # Arguments
+    -     `AVEDIST`: vector with the average distance of a cluster center to each of its members
+    -          `AD`: the overall average distance of cluster centers to their members
+    - `assignments`: vector of length `n` with the assigned cluster
+    -       `costs`: vector with the cost to assign data point `i` to
+                        the nearest cluster center
+    -      `counts`: array of the number of patterns assigned to each cluster
+"""
+function update_avedist!(
+        AVEDIST::Vector{Float64},   # in/out
+        AD::Float64,                # out
+        assignments::Vector{Int},   # in
+        costs::Vector{<:Real},      # in
+        counts::Vector{Int})        # in
+    n = size(costs, 1)
+    k = size(counts, 1)
 
     for j in 1:k
-        AVEDIST[j] = costs[j]/counts[j]
-        AD += costs[j]*counts[j]
+        cost = 0
+        for i in 1:n
+            if assignments[i] == j
+                cost += costs[i]
+            end
+        end
+        AVEDIST[j] = cost/counts[j]
+        AD += AVEDIST[j]
     end
 
     AD /= k
+    return AD
 end
 
-function update_sd(
+"""
+    update_sd!(X, assignments, centers, counts, cd) -> None
+
+    Calculate new means and update `centers` in place using `assignments`.
+
+    # Arguments
+    -           `X`: array of the distance of each point to each cluster
+    - `assignments`: vector of length `n` with the assigned cluster
+    -     `centers`: array of cluster centers
+    -      `counts`: array of the number of patterns assigned to each cluster
+    -          `sd`: array of the standard deviation of each cluster 
+                        in each dimension
+"""
+function update_sd!(
         X::AbstractMatrix{<:Real},
         assignments::Vector{Int},
         centers::AbstractMatrix{<:AbstractFloat},
@@ -166,4 +229,3 @@ function update_sd(
         end
     end
 end
-

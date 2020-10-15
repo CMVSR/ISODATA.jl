@@ -9,5 +9,6 @@ module ISODATA
     ## source files
     include("base.jl")
     include("centers.jl")
+    include("clusters.jl")
 
 end
