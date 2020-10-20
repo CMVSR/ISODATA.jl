@@ -14,8 +14,9 @@ function discard(
     unique!(to_delete)
     sort!(to_delete)
     l = size(to_delete, 1)
+    k = size(centers, 2)
 
-    if l > 0
+    if l > 0 && k > l
         temp = centers[:, setdiff(1:end, to_delete)]
         return temp
     end
@@ -49,12 +50,13 @@ function discard_clusters!(
 
     to_delete = Vector{Int}()
     for j in 1:k
-        if ((counts[j]/d) < (θn*n))
+        if (counts[j] < (θn*n))
             push!(to_delete, j)
         end
     end
 
     centers = discard(to_delete, centers)
+    return centers
 end
 
 """
@@ -107,6 +109,7 @@ function split!(
     end
 
     centers = discard(to_delete, centers)
+    return centers
 end
 
 """
@@ -164,7 +167,8 @@ function split_clusters!(
         end
     end
 
-    split!(to_split, centers, sd)
+    centers = split!(to_split, centers, sd)
+    return centers
 end
 
 """
@@ -213,6 +217,7 @@ function lump!(
     end
 
     centers = discard(to_delete, centers)
+    return centers
 end
 
 """
@@ -257,5 +262,6 @@ function lump_clusters!(
         break
     end
 
-    lump!(to_lump, centers, counts)
+    centers = lump!(to_lump, centers, counts)
+    return centers
 end
