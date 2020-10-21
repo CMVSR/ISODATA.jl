@@ -7,7 +7,7 @@ struct ClusteringResult{C<:AbstractMatrix{<:AbstractFloat},D<:Real}
     sd::C                      # standard deviation of each cluster (k) in each dimension (d)
 end
 
-const _default_θn   = Float64(0.01) 
+const _default_θn   = Float64(0.15)
 const _default_θe   = Float64(1)
 const _default_θc   = Float64(0.5)
 const _default_L    = Integer(2)
@@ -39,21 +39,25 @@ function base(X::AbstractMatrix{<:Real},
     d, n = size(X)
 
     # assign initial cluster centers
+    # centers = kmppcenters(X, k)
     centers = randomcenters(X, k)
     assignments = Vector{Int}(undef, n)
-    counts = Vector{Int}(undef, k)
 
     dist = pairwise(Euclidean(), centers, X, dims=2)
     D = eltype(dist)
 
+    counts = Vector{Int}(undef, k)
     costs = Vector{D}(undef, n)
     sd = Array{D}(undef, d, k)
     
     for i = 1:iter
         # compute number of clusters
         NROWS = size(centers, 2)
+        #println(NROWS)
 
         # assign cluster members
+        counts = Vector{Int}(undef, NROWS)
+        dist = pairwise(Euclidean(), centers, X, dims=2)
         update_assignments!(dist, assignments, costs, counts)
         update_centers!(X, assignments, centers, counts)
 
@@ -67,13 +71,15 @@ function base(X::AbstractMatrix{<:Real},
         update_sd!(X, assignments, centers, counts, sd)
     
         # discard small clusters
-        discard_clusters!(X, centers, counts, θn)
+        centers = discard_clusters!(X, centers, counts, θn)
 
         # split or lump
-        if mod(i, 2) != 0 || i == iter
-            lump_clusters!(centers, counts, L, θc)
-        elseif mod(i, 2) == 0
-            split_clusters!(X, centers, counts, sd, k, AVEDIST, AD, θn, θe)
+        if size(centers, 2) == NROWS
+            if mod(i, 2) != 0 || i == iter
+                centers = lump_clusters!(centers, counts, L, θc)
+            elseif mod(i, 2) == 0
+                centers = split_clusters!(X, centers, counts, sd, k, AVEDIST, AD, θn, θe)
+            end
         end
     end
 
