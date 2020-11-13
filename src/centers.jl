@@ -4,17 +4,17 @@
 
     Return a vector of `k` cluster centers chosen from `X` data matrix.
 """
-function randomcenters(X::AbstractMatrix{<:Real},
-                       k::Integer;)
+function randomcenters(X::AbstractMatrix{<:Real}, k::Integer;)
     d, n = size(X)
     i = sample(1:size(X, 2), k)
     return X[:, i]
 end
 
 function kmppcenters(
-        X::AbstractMatrix{<:Real},
-        k::Integer;
-        metric::PreMetric = SqEuclidean())
+    X::AbstractMatrix{<:Real},
+    k::Integer;
+    metric::PreMetric = SqEuclidean(),
+)
     n = size(X, 2)
 
     D = eltype(X)

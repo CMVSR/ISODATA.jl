@@ -8,7 +8,7 @@ using MLLabelUtils
 using StatsBase
 using AssignmentSolver
 
-X, Y, fnames = load_iris();
+X, Y, fnames = load_iris()
 Y = convertlabel(MLLabelUtils.LabelEnc.Indices{Int64,3}(), Y, labelenc(Y))
 # X = zscore(X)
 # res = base(X, 3, θn=0.25, θe=0.12, θc=1.5, iter=15)

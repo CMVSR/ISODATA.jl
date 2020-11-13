@@ -7,10 +7,10 @@ struct ClusteringResult{C<:AbstractMatrix{<:AbstractFloat},D<:Real}
     sd::C                      # standard deviation of each cluster (k) in each dimension (d)
 end
 
-const _default_θn   = Float64(0.15)
-const _default_θe   = Float64(1)
-const _default_θc   = Float64(0.5)
-const _default_L    = Integer(2)
+const _default_θn = Float64(0.15)
+const _default_θe = Float64(1)
+const _default_θc = Float64(0.5)
+const _default_L = Integer(2)
 const _default_iter = Int(10)
 
 """
@@ -29,13 +29,15 @@ const _default_iter = Int(10)
     - `L`:      number of clusters to merge during lumping
     - `iter`:   number of iterations to run
 """
-function base(X::AbstractMatrix{<:Real},
-              k::Integer;
-              θn::Float64=_default_θn,
-              θe::Float64=_default_θe,
-              θc::Float64=_default_θc,
-              L::Integer=2,
-              iter::Integer=_default_iter)
+function base(
+    X::AbstractMatrix{<:Real},
+    k::Integer;
+    θn::Float64 = _default_θn,
+    θe::Float64 = _default_θe,
+    θc::Float64 = _default_θc,
+    L::Integer = 2,
+    iter::Integer = _default_iter,
+)
     d, n = size(X)
 
     # assign initial cluster centers
@@ -43,13 +45,13 @@ function base(X::AbstractMatrix{<:Real},
     centers = randomcenters(X, k)
     assignments = Vector{Int}(undef, n)
 
-    dist = pairwise(Euclidean(), centers, X, dims=2)
+    dist = pairwise(Euclidean(), centers, X, dims = 2)
     D = eltype(dist)
 
     counts = Vector{Int}(undef, k)
     costs = Vector{D}(undef, n)
     sd = Array{D}(undef, d, k)
-    
+
     for i = 1:iter
         # compute number of clusters
         NROWS = size(centers, 2)
@@ -57,11 +59,11 @@ function base(X::AbstractMatrix{<:Real},
 
         # assign cluster members
         counts = Vector{Int}(undef, NROWS)
-        dist = pairwise(Euclidean(), centers, X, dims=2)
+        dist = pairwise(Euclidean(), centers, X, dims = 2)
         update_assignments!(dist, assignments, costs, counts)
         update_centers!(X, assignments, centers, counts)
 
-        dist = pairwise(Euclidean(), centers, X, dims=2)
+        dist = pairwise(Euclidean(), centers, X, dims = 2)
         AVEDIST = Vector{Float64}(undef, NROWS)
         AD = Float64(0)
         AD = update_avedist!(AVEDIST, AD, assignments, costs, counts)
@@ -69,7 +71,7 @@ function base(X::AbstractMatrix{<:Real},
         # compute std dev of each component in each cluster
         sd = Array{D}(undef, d, NROWS)
         update_sd!(X, assignments, centers, counts, sd)
-    
+
         # discard small clusters
         centers = discard_clusters!(X, centers, counts, θn)
 
@@ -100,16 +102,17 @@ end
     -      `counts`: array of the number of patterns assigned to each cluster
 """
 function update_assignments!(
-        dist::Matrix{<:Real},       # in
-        assignments::Vector{Int},   # out
-        costs::Vector{<:Real},      # out
-        counts::Vector{Int})        # out
+    dist::Matrix{<:Real},       # in
+    assignments::Vector{Int},   # out
+    costs::Vector{<:Real},      # out
+    counts::Vector{Int},
+)        # out
     k, n = size(dist)
 
     fill!(counts, 0)
     fill!(costs, 0)
 
-    for j in 1:n
+    for j = 1:n
         c, a = findmin(view(dist, :, j))
         assignments[j] = a
         costs[j] += c
@@ -129,28 +132,29 @@ end
     -      `counts`: array of the number of patterns assigned to each cluster
 """
 function update_centers!(
-        X::AbstractMatrix{<:Real},                  # in
-        assignments::Vector{Int},                   # in
-        centers::AbstractMatrix{<:AbstractFloat},   # out
-        counts::Vector{Int})                        # in
+    X::AbstractMatrix{<:Real},                  # in
+    assignments::Vector{Int},                   # in
+    centers::AbstractMatrix{<:AbstractFloat},   # out
+    counts::Vector{Int},
+)                        # in
     d, n = size(X)
     k = size(centers, 2)
 
     fill!(centers, 0)
 
     # for each data point
-    for j in 1:n
+    for j = 1:n
         cj = assignments[j]
         # for each dimension
-        for i in 1:d
+        for i = 1:d
             centers[i, cj] += X[i, j]
         end
     end
 
     # for each cluster
-    for j in 1:k
+    for j = 1:k
         # for each dimension
-        for i in 1:d
+        for i = 1:d
             centers[i, j] /= counts[j]
         end
     end
@@ -171,22 +175,23 @@ end
     -      `counts`: array of the number of patterns assigned to each cluster
 """
 function update_avedist!(
-        AVEDIST::Vector{Float64},   # in/out
-        AD::Float64,                # out
-        assignments::Vector{Int},   # in
-        costs::Vector{<:Real},      # in
-        counts::Vector{Int})        # in
+    AVEDIST::Vector{Float64},   # in/out
+    AD::Float64,                # out
+    assignments::Vector{Int},   # in
+    costs::Vector{<:Real},      # in
+    counts::Vector{Int},
+)        # in
     n = size(costs, 1)
     k = size(counts, 1)
 
-    for j in 1:k
+    for j = 1:k
         cost = 0
-        for i in 1:n
+        for i = 1:n
             if assignments[i] == j
                 cost += costs[i]
             end
         end
-        AVEDIST[j] = cost/counts[j]
+        AVEDIST[j] = cost / counts[j]
         AD += AVEDIST[j]
     end
 
@@ -208,30 +213,31 @@ end
                         in each dimension
 """
 function update_sd!(
-        X::AbstractMatrix{<:Real},
-        assignments::Vector{Int},
-        centers::AbstractMatrix{<:AbstractFloat},
-        counts::Vector{Int},
-        sd::AbstractMatrix{<:AbstractFloat})
+    X::AbstractMatrix{<:Real},
+    assignments::Vector{Int},
+    centers::AbstractMatrix{<:AbstractFloat},
+    counts::Vector{Int},
+    sd::AbstractMatrix{<:AbstractFloat},
+)
     d, n = size(X)
     k = size(centers, 2)
 
     fill!(sd, 0)
 
     # for each data point
-    for j in 1:n
+    for j = 1:n
         cj = assignments[j]
         # for each dimension
-        for i in 1:d
-            sd[i, cj] += (X[i, j]-centers[cj])^2
+        for i = 1:d
+            sd[i, cj] += (X[i, j] - centers[cj])^2
         end
     end
 
     # for each cluster
-    for j in 1:k
+    for j = 1:k
         # for each dimension
-        for i in 1:d
-            sd[i, j] = sqrt(sd[i, j]/counts[j])
+        for i = 1:d
+            sd[i, j] = sqrt(sd[i, j] / counts[j])
         end
     end
 end

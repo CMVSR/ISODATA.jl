@@ -8,9 +8,7 @@
     - `to_delete`: vector of indices to delete
     -   `centers`: array of cluster centers
 """
-function discard(
-        to_delete::Vector{Int},
-        centers::AbstractMatrix{<:AbstractFloat})
+function discard(to_delete::Vector{Int}, centers::AbstractMatrix{<:AbstractFloat})
     unique!(to_delete)
     sort!(to_delete)
     l = size(to_delete, 1)
@@ -41,16 +39,17 @@ end
     -         `θn`: minimum number of cluster members (as percentage)
 """
 function discard_clusters!(
-        X::AbstractMatrix{<:Real},
-        centers::AbstractMatrix{<:AbstractFloat},
-        counts::Vector{Int},
-        θn::Float64)
+    X::AbstractMatrix{<:Real},
+    centers::AbstractMatrix{<:AbstractFloat},
+    counts::Vector{Int},
+    θn::Float64,
+)
     d, n = size(X)
     k = size(centers, 2)
 
     to_delete = Vector{Int}()
-    for j in 1:k
-        if (counts[j] < (θn*n))
+    for j = 1:k
+        if (counts[j] < (θn * n))
             push!(to_delete, j)
         end
     end
@@ -77,15 +76,16 @@ end
                     in each dimension
 """
 function split!(
-        to_split::Vector{Int},
-        centers::AbstractMatrix{<:AbstractFloat},
-        sd::AbstractMatrix{<:AbstractFloat})
+    to_split::Vector{Int},
+    centers::AbstractMatrix{<:AbstractFloat},
+    sd::AbstractMatrix{<:AbstractFloat},
+)
     unique!(to_split)
     l = size(to_split, 1)
     to_delete = Vector{Int}()
 
     if l > 0
-        for j in 1:l
+        for j = 1:l
             k = to_split[j]
 
             # create a copy
@@ -103,8 +103,8 @@ function split!(
             c_minus[i] -= 1
 
             push!(to_delete, k)
-            centers = cat(centers, c_plus, dims=2)
-            centers = cat(centers, c_minus, dims=2)
+            centers = cat(centers, c_plus, dims = 2)
+            centers = cat(centers, c_minus, dims = 2)
         end
     end
 
@@ -143,24 +143,27 @@ end
     -          `θe`: maximum standard deviation allowed for a cluster
 """
 function split_clusters!(
-        X::AbstractMatrix{<:Real},
-        centers::AbstractMatrix{<:AbstractFloat},
-        counts::Vector{Int},
-        sd::AbstractMatrix{<:AbstractFloat},
-        maxclusters::Integer,
-        AVEDIST::Vector{Float64},
-        AD::Float64,
-        θn::Float64,
-        θe::Float64)
+    X::AbstractMatrix{<:Real},
+    centers::AbstractMatrix{<:AbstractFloat},
+    counts::Vector{Int},
+    sd::AbstractMatrix{<:AbstractFloat},
+    maxclusters::Integer,
+    AVEDIST::Vector{Float64},
+    AD::Float64,
+    θn::Float64,
+    θe::Float64,
+)
     d, n = size(X)
     k = size(centers, 2)
 
     to_split = Vector{Int}()
-    for j in 1:k
-        for i in 1:d
+    for j = 1:k
+        for i = 1:d
             if sd[i, j] > θe
-                if ((AVEDIST[j] > AD && counts[j]>2*(θn*n)+2)
-                        || k <= 0.5*maxclusters)
+                if (
+                    (AVEDIST[j] > AD && counts[j] > 2 * (θn * n) + 2) ||
+                    k <= 0.5 * maxclusters
+                )
                     push!(to_split, j)
                 end
             end
@@ -186,33 +189,36 @@ end
     -   `counts`: array of the number of patterns assigned to each cluster
 """
 function lump!(
-        to_lump::Vector{Int},
-        centers::AbstractMatrix{<:AbstractFloat},
-        counts::Vector{Int})
+    to_lump::Vector{Int},
+    centers::AbstractMatrix{<:AbstractFloat},
+    counts::Vector{Int},
+)
     l = size(to_lump, 1)
     to_delete = Vector{Int}()
 
     if l > 0
-        for j in range(1, l, step=2)
+        for j in range(1, l, step = 2)
             # create a copy of each cluster to merge
             i1 = to_lump[j]
             i2 = to_lump[j+1]
             c1 = view(centers, :, i1)
             c2 = view(centers, :, i2)
-            
+
             # empty cluster based on c1
             p = copy(c1)
             fill!(p, 0)
 
             d = size(centers, 1)
-            for i in 1:d
-                p[d] = (1/(counts[i1]+counts[i2]) 
-                    * (counts[i1]*c1[i]) + counts[i2]*c2[d])
+            for i = 1:d
+                p[d] = (
+                    1 / (counts[i1] + counts[i2]) * (counts[i1] * c1[i]) +
+                    counts[i2] * c2[d]
+                )
             end
 
             push!(to_delete, i1)
             push!(to_delete, i2)
-            centers = cat(centers, p, dims=2)
+            centers = cat(centers, p, dims = 2)
         end
     end
 
@@ -239,17 +245,18 @@ end
     -          `θc`: maximum standard deviation allowed for a cluster
 """
 function lump_clusters!(
-        centers::AbstractMatrix{<:AbstractFloat},
-        counts::Vector{Int},
-        L::Integer,
-        θc::Float64)
+    centers::AbstractMatrix{<:AbstractFloat},
+    counts::Vector{Int},
+    L::Integer,
+    θc::Float64,
+)
     k = size(centers, 2)
     dist = pairwise(Euclidean(), centers, centers)
 
     to_lump = Vector{Int}()
     while k > L
-        for j in 1:k
-            for i in 1:k
+        for j = 1:k
+            for i = 1:k
                 if (i != j && dist[i, j] < θc)
                     if (i ∉ to_lump && j ∉ to_lump)
                         push!(to_lump, i)
