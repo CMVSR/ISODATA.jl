@@ -5,6 +5,7 @@ struct ClusteringResult{C<:AbstractMatrix{<:AbstractFloat},D<:Real}
     costs::Vector{D}           # cost of the assignments (n)
     counts::Vector{Int}        # number of points assigned to each cluster (k)
     sd::C                      # standard deviation of each cluster (k) in each dimension (d)
+    iter::Int                  # number of iterations required to acquire result 
 end
 
 const _default_θn = Float64(0.15)
@@ -12,6 +13,7 @@ const _default_θe = Float64(1)
 const _default_θc = Float64(0.5)
 const _default_L = Integer(2)
 const _default_iter = Int(10)
+const _default_threshold = Float64(0.98)
 
 """
     base(X, k, [...]) -> ClusteringResult
@@ -85,7 +87,101 @@ function base(
         end
     end
 
-    return ClusteringResult(centers, assignments, costs, counts, sd)
+    return ClusteringResult(centers, assignments, costs, counts, sd, iter)
+end
+
+"""
+    base_conv(X, k, [...]) -> ClusteringResult
+
+    ISODATA clustering of the ``d×n`` data matrix `X` (each column of `X`
+    is a ``d``-dimensional data point) into maximum of `k` clusters. Rather
+    than taking a parameter for the number of iterations, this function will
+    iterate until convergence.
+
+    # Arguments
+    - `θn`:     minimum number of cluster members (as percentage)
+                    *determines discarding clusters
+    - `θe`:     maximum standard deviation allowed for a cluster
+                    *determines splitting clusters
+    - `θc`:     minimum distance between clusters
+                    *determines lumping clusters
+    - `L`:      number of clusters to merge during lumping
+    - `T`:      maximum number of samples whose cluster assignments
+                    is allowed to be unchanged between iterations.
+                    *terminates when this threshold is reached
+    - `iseeds`: function to determine initial seeds. accepted values:
+                    randomcenters, kmppcenters, isodata_s
+"""
+function base_conv(
+    X::AbstractMatrix{<:Real},
+    k::Integer;
+    θn::Float64 = _default_θn,
+    θe::Float64 = _default_θe,
+    θc::Float64 = _default_θc,
+    L::Integer = 2,
+    T::Float64 = _default_threshold,
+    iseeds = randomcenters
+)
+    d, n = size(X)
+
+    # assign initial cluster centers
+    centers = iseeds(X, k)
+    assignments = Vector{Int}(undef, n)
+
+    dist = pairwise(Euclidean(), centers, X, dims = 2)
+    D = eltype(dist)
+
+    costs = Vector{D}(undef, n)
+    counts = Vector{Int}(undef, k)
+    sd = Array{D}(undef, d, k)
+    iter = 0
+
+    while true
+        iter += 1
+        if iter > 1000
+            return ClusteringResult(centers, assignments, costs, counts, sd, iter)
+        end
+
+        # compute number of clusters
+        NROWS = size(centers, 2)
+
+        # assign cluster members
+        counts = Vector{Int}(undef, NROWS)
+        dist = pairwise(Euclidean(), centers, X, dims = 2)
+
+        prev_assignments = deepcopy(assignments)
+        update_assignments!(dist, assignments, costs, counts)
+        update_centers!(X, assignments, centers, counts)
+
+        # check convergence threshold
+        updates = assignments .== prev_assignments
+        if (sum(updates)/length(updates)) > T
+            return ClusteringResult(centers, assignments, costs, counts, sd, iter)
+        end
+
+        dist = pairwise(Euclidean(), centers, X, dims = 2)
+        AVEDIST = Vector{Float64}(undef, NROWS)
+        AD = Float64(0)
+        AD = update_avedist!(AVEDIST, AD, assignments, costs, counts)
+
+        # compute std dev of each component in each cluster
+        sd = Array{D}(undef, d, NROWS)
+        update_sd!(X, assignments, centers, counts, sd)
+
+        # discard small clusters
+        centers, deleted = discard_clusters!(X, centers, counts, θn)
+
+        # split or lump
+        if !deleted && size(centers, 2) == NROWS
+            if mod(iter, 2) != 0
+                centers = lump_clusters!(centers, counts, L, θc)
+            elseif mod(iter, 2) == 0
+                centers = split_clusters!(X, centers, counts, sd, k, AVEDIST, AD, θn, θe)
+            end
+        end
+    end
+
+    return ClusteringResult(centers, assignments, costs, counts, sd, iter)
 end
 
 """
@@ -126,7 +222,7 @@ end
     Calculate new means and update `centers` in place using `assignments`.
 
     # Arguments
-    -           `X`: array of the distance of each point to each cluster
+    -           `X`: array of the input data
     - `assignments`: vector of length `n` with the assigned cluster
     -     `centers`: array of cluster centers
     -      `counts`: array of the number of patterns assigned to each cluster
@@ -135,8 +231,8 @@ function update_centers!(
     X::AbstractMatrix{<:Real},                  # in
     assignments::Vector{Int},                   # in
     centers::AbstractMatrix{<:AbstractFloat},   # out
-    counts::Vector{Int},
-)                        # in
+    counts::Vector{Int},                        # in
+)
     d, n = size(X)
     k = size(centers, 2)
 
@@ -200,7 +296,7 @@ function update_avedist!(
 end
 
 """
-    update_sd!(X, assignments, centers, counts, cd) -> None
+    update_sd!(X, assignments, centers, counts, sd) -> None
 
     Calculate new means and update `centers` in place using `assignments`.
 

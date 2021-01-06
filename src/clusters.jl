@@ -54,8 +54,15 @@ function discard_clusters!(
         end
     end
 
-    centers = discard(to_delete, centers)
-    return centers
+    # if clusters are to be deleted, set flag
+    flag = !isempty(to_delete)
+
+    if flag
+        centers = discard(to_delete, centers)
+        return centers, flag
+    else
+        return centers, flag
+    end
 end
 
 """
