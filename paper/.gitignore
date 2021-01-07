@@ -1,4 +1,6 @@
 *
 !.gitignore
-!report.tex
-!report.bib
+!paper.tex
+!paper.bib
+!img/
+!img/*

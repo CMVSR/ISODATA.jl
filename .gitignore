@@ -3,5 +3,6 @@
 *.jl.mem
 /docs/build/
 .vscode
+data
 
 app.jl

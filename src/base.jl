@@ -138,7 +138,7 @@ function base_conv(
 
     while true
         iter += 1
-        if iter > 1000
+        if iter > 100
             return ClusteringResult(centers, assignments, costs, counts, sd, iter)
         end
 

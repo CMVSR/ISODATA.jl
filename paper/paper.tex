@@ -1,0 +1,296 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Journal Article
+% LaTeX Template
+% Version 1.4 (15/5/16)
+%
+% This template has been downloaded from:
+% http://www.LaTeXTemplates.com
+%
+% Original author:
+% Frits Wenneker (http://www.howtotex.com) with extensive modifications by
+% Vel (vel@LaTeXTemplates.com)
+%
+% License:
+% CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass[twoside,twocolumn]{article}
+
+\usepackage{blindtext} % Package to generate dummy text throughout this template 
+
+\usepackage[sc]{mathpazo} % Use the Palatino font
+\usepackage[T1]{fontenc} % Use 8-bit encoding that has 256 glyphs
+\linespread{1.05} % Line spacing - Palatino needs more space between lines
+\usepackage{microtype} % Slightly tweak font spacing for aesthetics
+
+\usepackage[english]{babel} % Language hyphenation and typographical rules
+
+\usepackage[hmarginratio=1:1,top=32mm,columnsep=20pt]{geometry} % Document margins
+\usepackage[hang, small,labelfont=bf,up,textfont=it,up]{caption} % Custom captions under/above floats in tables or figures
+\usepackage{booktabs} % Horizontal rules in tables
+
+\usepackage{lettrine} % The lettrine is the first enlarged letter at the beginning of the text
+
+\usepackage{enumitem} % Customized lists
+\setlist[itemize]{noitemsep} % Make itemize lists more compact
+
+\usepackage{abstract} % Allows abstract customization
+\renewcommand{\abstractnamefont}{\normalfont\bfseries} % Set the "Abstract" text to bold
+\renewcommand{\abstracttextfont}{\normalfont\small} % Set the abstract itself to small italic text
+
+\usepackage{titlesec} % Allows customization of titles
+\renewcommand\thesection{\Roman{section}} % Roman numerals for the sections
+\renewcommand\thesubsection{\Roman{subsection}} % roman numerals for subsections
+\titleformat{\section}[block]{\large\scshape\centering}{\thesection.}{1em}{} % Change the look of the section titles
+\titleformat{\subsection}[block]{\large}{\thesubsection.}{1em}{} % Change the look of the section titles
+
+\usepackage{fancyhdr} % Headers and footers
+\pagestyle{fancy} % All pages have headers and footers
+\fancyhead{} % Blank out the default header
+\fancyfoot{} % Blank out the default footer
+\fancyhead[C]{Running title $\bullet$ May 2016 $\bullet$ Vol. XXI, No. 1} % Custom header text
+\fancyfoot[RO,LE]{\thepage} % Custom footer text
+
+\usepackage{titling} % Customizing the title section
+
+\usepackage{hyperref} % For hyperlinks in the PDF
+
+%----------------------------------------------------------------------------------------
+%	TITLE SECTION
+%----------------------------------------------------------------------------------------
+
+\setlength{\droptitle}{-4\baselineskip} % Move the title up
+
+\pretitle{\begin{center}\Huge\bfseries} % Article title formatting
+\posttitle{\end{center}} % Article title closing formatting
+\title{ISO-S: An ISODATA-Based Initial Centroid Algorithm} % Article title
+\author{%
+  \textsc{
+    Noah Gardner$^1$\thanks{ngardn10@students.kennesaw.edu}, 
+    Sahar Yarmohamadi$^2$\thanks{yarmohamadishr@gmail.com},
+    Anthony Phan$^1$\thanks{aphan5@students.kennesaw.edu},
+    Chih-Cheng Hung$^1$\thanks{chung1@students.kennesaw.edu}}\\[1ex]
+  \normalsize $^1$Kennesaw State University \\
+  \normalsize College of Computing and Software Engineering \\
+  \normalsize Marietta, GA, USA
+  \and
+  \normalsize $^2$Institution 2 \\ %TODO 
+}
+\date{} % Leave empty to omit a date
+
+\renewcommand{\maketitlehookd}{%
+\begin{abstract}
+\noindent 
+Iterative Self-Organizing Data Analysis Technique (ISODATA) is a clustering
+algorithm based on K-Means that intends to find the correct number of clusters
+through merging and splitting. Compared to K-Means, the ISODATA algorithm should
+be resilient to initial cluster centers. However, ISODATA is also sensitive to
+initial cluster centers which impacts the performance of the algorithm. This
+work proposes using the ISODATA approach of splitting clusters to select quality
+initial cluster centers. The proposed approach is evaluated on several benchmark
+UCI datasets as well as the Salinas-A hyperspectral image dataset. The results
+are evaluated using standard clustering evaluation parameters. \\ \\
+\textit{\textbf{Keywords:} Clustering, ISODATA, Initial Centroid, Remote Sensing} \\
+\end{abstract}
+}
+
+%----------------------------------------------------------------------------------------
+
+\begin{document}
+
+% Print the title
+\maketitle
+
+%----------------------------------------------------------------------------------------
+%	ARTICLE CONTENTS
+%----------------------------------------------------------------------------------------
+
+\section{Introduction}
+
+\lettrine[nindent=0em,lines=3]{R} emote sensing technology is used when
+the data collection takes place at a remote distance from the subject matter,
+such as the study of daily weather and long-term climate change, land cover
+monitoring, ecosystem modeling of vegetation, and so on. Multispectral imaging
+technology is one of the instruments for remote sensing used since the late
+1960s. However, multispectral imaging systems use a low number of spectral bands
+(three to six spectral bands in different systems). Increasing spectral
+resolution in the hyperspectral images (HSI) with several hundred spectral bands
+of the observational scene in a single acquisition makes it possible to acquire
+detailed examination of observational scenes. The ground-based version of
+hyperspectral images has gained immense interest. It has been applied to
+numerous electronic imaging applications, including food inspection, forensic
+science, medical surgery and diagnosis, and military applications. Because of
+the difficulty of obtaining prior knowledge in remote sensing studies,
+unsupervised classification and cluster analysis have great importance compared
+to supervised classification. 
+
+Unsupervised learning is a machine learning technique used when the learning
+algorithm has no pre-existing labels and looks for patterns in the data set with
+minimum human supervision and without external guidance. In contrast to
+supervised learning, where a training set of inputs and observations are given
+to the method, unsupervised learning uses only the inputs and should find an
+interesting pattern in the data set. Two main approaches are used in
+unsupervised learning, named principal component and cluster analysis. In the
+clustering method, unlabeled and unsorted data points are grouped and segmented
+according to similarities and differences to find structure in the inputs, group
+it into meaningful clusters, and understand the data set better. There are
+different algorithms for Clustering, such as K-Means, fuzzy C-Means, ISODATA,
+and so on. In the K-Means algorithm, the goal is to minimize the sum of the
+squared distances points have in the data set from its center. The problem with
+the K-Means algorithm is that it requires a priori knowledge about the number of
+classes in the data set, and choosing the cluster centers randomly may not
+result in optimal partitioning of the data set.
+
+One of the most popular clustering algorithms is called ISODATA clustering,
+based on the K-means algorithm with some variations. The ISODATA method's
+preference in comparison with the K-means algorithm is that the ISODATA
+algorithm uses splitting and merging forms for clusters. The ISODATA method
+allows starting from arbitrary cluster centers and obtains better partitioning
+results than the K-Means algorithm, but it is not entirely resilient to initial
+cluster centers. In this paper, a novel method using the ISODATA approach of
+splitting clusters to select high-quality initial cluster centers is proposed.
+This new method decreases the number of iterations and improves the overall
+performance of the algorithm.
+
+The paper is organized as follows: Section 2 introduces K-Means and ISODATA
+clustering algorithms. The new proposed algorithm is explained in Section 3. We
+present the experimental results in Section 4. Finally, Section 5 contains
+concluding remarks.
+
+%------------------------------------------------
+
+\section{Methods}
+
+\subsection{K-Means Algorithm}
+
+K-Means algorithm is an unsupervised clustering algorithm and aims to partition
+$N$ observations into $K$ clusters. Data points in the same cluster are very similar
+to and with less variation. The user defines $K$, and these $K$ centers are placed
+as far as possible for obtaining better clustering results. K-Means algorithm is
+susceptible to initial starting cluster centers, and different initial values
+result in a different classification. The next step is to assign each data point
+to the nearest cluster center using Euclidean-based distance or other measures
+based on the application-specific. After the assignment, the cluster centers are
+updated by taking the average of all data points that belong to each cluster. We
+continue this process until we meet the convergence criteria or the last
+iteration. The algorithm is as follow:
+
+\begin{itemize}
+\item \textbf{Step 1:} Choose $K$ cluster centers from the data set.
+\item \textbf{Step 2:} Assign each element of the data set to the cluster based
+on the minimum distance from the cluster center.
+\item \textbf{Step 3:} Re-calculate new cluster centers for each cluster after
+the assignment in step 2, e.g., computing the mean of all patterns assigned to
+each cluster.
+\item \textbf{Step 4:} Continue steps 2 and 3 until Clustering convergence
+occurs, or the number of iterations is exceeded.
+\end{itemize}
+
+For selecting the initial cluster centers in \textbf{Step 1}, there are two
+standard methods:
+
+\begin{itemize}
+\item \textbf{Random Centers:} Explain here %TODO
+\item \textbf{K-Means++:} Explain here %TODO
+\end{itemize}
+
+%------------------------------------------------
+
+\subsection{ISODATA Algorithm}
+
+ISODATA is another frequently used clustering algorithm and is similar to the
+K-Means algorithm. However, in the ISODATA algorithm, the number of cluster
+centers is determined dynamically, and it allows for a different number of
+cluster centers. In contrast, the K-Means algorithm assumes that the number of
+cluster centers is specified and fixated by the user. Some parameters such as
+initial clusters' means, the minimum number of patterns in each cluster,
+splitting and lumping parameters, and the number of iterations should be defined
+and specified by the user. Like the K-Means algorithm, the first steps are
+assignment all data points to the nearest cluster center and then recalculating
+the cluster centers by replacing the average data point in each cluster. In the
+next step, if a cluster does not reach the minimum number of clusters, the
+user-specified, we eliminate it. After that, we do the splitting or lumping
+process if their conditions are met. The cluster centers are updated based on
+the newly grouped patterns. We continue this process until the convergence
+occurs or the number of iterations is exceeded. The ISODATA algorithm is as
+follow: 
+
+\begin{itemize}
+\item \textbf{Step 1:} Choose $K$ cluster centers from the data set.
+\item \textbf{Step 2:} Assign each element of the data set to the cluster based
+on the minimum distance from the cluster center.
+\item \textbf{Step 3:} Re-calculate new cluster centers for each cluster after
+the assignment in step 2, e.g., computing the mean of all patterns assigned to
+each cluster.
+\item \textbf{Step 4:} Compare the number of patterns in each cluster against
+the user's number ($\theta n$)and discard small sets. 
+\item \textbf{Step 5:} Do splitting process based on splitting parameter
+($\theta e$) if this iteration is an odd-numbered iteration of the number of
+clusters is less than or equal to ½ the desired.
+\item \textbf{Step 6:} Do merging process based on merging parameter ($\theta
+c$)if this iteration is even-numbered, or if the number of clusters is greater
+than or equal to twice the number desired.
+\item \textbf{Step 7:} Start the process again at step 2 with new cluster
+centers after splitting or lumping.
+\item \textbf{Step 8:} If this is not the last iteration, start the process
+again at step 2. If this is the last iteration, then end the process.
+\end{itemize}
+
+%------------------------------------------------
+
+\subsection{Proposed Method: ISO-S}
+The proposed clustering algorithm's objective is to improve the result we obtain
+from the ISODATA algorithm by decreasing the number of iterations needed for
+convergence. Inspired by the ISODATA algorithm, this capability is achieved
+using the splitting technique to update each iteration cluster centers. The main
+inputs for this algorithm are the arbitrary initial number of cluster centers
+and the processing parameters. First, the algorithm starts with the one cluster
+center and assign the patterns to this cluster center. Second, the new algorithm
+updates the cluster center by computing the mean of data points. Finally, the
+algorithm employs a splitting method to form new cluster centers. The cluster
+centers with the smallest number of members are discarded at the end of the
+maximum number of cluster centers we desire to obtain an odd number. We continue
+this process until we meet the convergence criteria: the maximum number of
+clusters desired or until we reach the maximum number of iterations. The
+algorithm is outlined below:
+
+%------------------------------------------------
+\section{Results}
+
+\blindtext % Dummy text
+
+%------------------------------------------------
+
+\section{Conclusion}
+
+\subsection{Subsection One}
+
+A statement requiring citation \cite{Figueredo:2009dg}.
+\blindtext % Dummy text
+
+\subsection{Subsection Two}
+
+\blindtext % Dummy text
+
+%----------------------------------------------------------------------------------------
+%	REFERENCE LIST
+%----------------------------------------------------------------------------------------
+
+\begin{thebibliography}{99} % Bibliography - this is intentionally simple in this template
+
+\bibitem[Figueredo and Wolf, 2009]{Figueredo:2009dg}
+Figueredo, A.~J. and Wolf, P. S.~A. (2009).
+\newblock Assortative pairing and life history strategy - a cross-cultural
+  study.
+\newblock {\em Human Nature}, 20:317--330.
+ 
+\end{thebibliography}
+
+%----------------------------------------------------------------------------------------
+
+\end{document}

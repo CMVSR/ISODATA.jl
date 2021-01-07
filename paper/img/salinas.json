@@ -1,0 +1,64 @@
+{
+    "description": {
+        "info": "This file contains experimental results from running ISODATA on Salinas-A with 3 different initial centroid algorithms.",
+        "iisodata": "ISODATA with ISO-S initial centroids",
+        "risodata": "ISODATA with random initial centroids",
+        "kisodata": "ISODATA with kmeans++ initial centroids",
+        "best": "Result parameters of the best run, shown in the .png file",
+        "avg": "Average result parameters after 1000 trials"
+    },
+    "iisodata":{
+        "best":{
+            "iter": 2.0,
+            "centers": 6.0,
+            "adj_idx": 0.758258,
+            "rand_idx": 0.921009,
+            "mirkin_idx": 0.0789908,
+            "hubert_idx": 0.842018
+        },
+        "avg":{
+            "iter": 2.772,
+            "centers": 2.42,
+            "adj_idx": 0.156121,
+            "rand_idx": 0.388242,
+            "mirkin_idx": 0.611758,
+            "hubert_idx": -0.223517
+        }
+    },
+    "kisodata":{
+        "best":{
+            "iter": 8.0,
+            "centers": 6.0,
+            "adj_idx": 0.781453,
+            "rand_idx": 0.929813,
+            "mirkin_idx": 0.070187,
+            "hubert_idx": 0.859626
+        },
+        "avg":{
+            "iter": 3.177,
+            "centers": 1.097,
+            "adj_idx": 0.0193429,
+            "rand_idx": 0.227756,
+            "mirkin_idx": 0.772244,
+            "hubert_idx": -0.544488
+        }
+    },
+    "risodata":{
+        "best":{
+            "iter": 14.0,
+            "centers": 6.0,
+            "adj_idx": 0.797932,
+            "rand_idx": 0.933401,
+            "mirkin_idx": 0.0665991,
+            "hubert_idx": 0.866802
+        },
+        "avg":{
+            "iter": 3.693,
+            "centers": 1.584,
+            "adj_idx": 0.0841022,
+            "rand_idx": 0.308538,
+            "mirkin_idx": 0.691462,
+            "hubert_idx": -0.382923
+        }
+    }
+}
