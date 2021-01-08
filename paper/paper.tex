@@ -68,18 +68,20 @@
 
 \pretitle{\begin{center}\Huge\bfseries} % Article title formatting
 \posttitle{\end{center}} % Article title closing formatting
-\title{ISO-S: An ISODATA-Based Initial Centroid Algorithm} % Article title
+\title{ISODS: An ISODATA-Based Initial Centroid Algorithm} % Article title
 \author{%
   \textsc{
     Noah Gardner$^1$\thanks{ngardn10@students.kennesaw.edu}, 
-    Sahar Yarmohamadi$^2$\thanks{yarmohamadishr@gmail.com},
+    Sahar Yarmohammadtoosky$^2$\thanks{yarmohamadishr@gmail.com},
+    }\\[1ex]
+  \textsc{
     Anthony Phan$^1$\thanks{aphan5@students.kennesaw.edu},
-    Chih-Cheng Hung$^1$\thanks{chung1@students.kennesaw.edu}}\\[1ex]
+    Chih-Cheng Hung$^1$\thanks{chung1@students.kennesaw.edu}} \\[1ex]
   \normalsize $^1$Kennesaw State University \\
   \normalsize College of Computing and Software Engineering \\
-  \normalsize Marietta, GA, USA
-  \and
-  \normalsize $^2$Institution 2 \\ %TODO 
+  \normalsize Marietta, GA, USA \\[1ex]
+  \normalsize $^2$Iran University of Science and Technology \\
+  \normalsize Tehran, Iran
 }
 \date{} % Leave empty to omit a date
 
@@ -164,105 +166,153 @@ concluding remarks.
 
 %------------------------------------------------
 
-\section{Methods}
-
 \subsection{K-Means Algorithm}
 
-K-Means algorithm is an unsupervised clustering algorithm and aims to partition
-$N$ observations into $K$ clusters. Data points in the same cluster are very similar
-to and with less variation. The user defines $K$, and these $K$ centers are placed
-as far as possible for obtaining better clustering results. K-Means algorithm is
-susceptible to initial starting cluster centers, and different initial values
-result in a different classification. The next step is to assign each data point
-to the nearest cluster center using Euclidean-based distance or other measures
-based on the application-specific. After the assignment, the cluster centers are
-updated by taking the average of all data points that belong to each cluster. We
-continue this process until we meet the convergence criteria or the last
-iteration. The algorithm is as follow:
+The K-Means algorithm is an unsupervised clustering algorithm and aims to
+partition $N$ observations into $K$ clusters [CITE]. Data points in the same
+cluster are very similar to each other and have less variation compared to data
+points assigned to other clusters. The user defines $K$, the number of expected
+clusters. Following is a description of the K-Means algorithm:
 
 \begin{itemize}
 \item \textbf{Step 1:} Choose $K$ cluster centers from the data set.
 \item \textbf{Step 2:} Assign each element of the data set to the cluster based
 on the minimum distance from the cluster center.
 \item \textbf{Step 3:} Re-calculate new cluster centers for each cluster after
-the assignment in step 2, e.g., computing the mean of all patterns assigned to
-each cluster.
-\item \textbf{Step 4:} Continue steps 2 and 3 until Clustering convergence
-occurs, or the number of iterations is exceeded.
+the assignment in \textbf{Step 2} by computing the mean of all patterns
+assigned to each cluster.
+\item \textbf{Step 4:} Repeat \textbf{Step 2 and Step 3} until clustering
+convergence occurs, or the set number of iterations is exceeded.
 \end{itemize}
 
 For selecting the initial cluster centers in \textbf{Step 1}, there are two
-standard methods:
-
-\begin{itemize}
-\item \textbf{Random Centers:} Explain here %TODO
-\item \textbf{K-Means++:} Explain here %TODO
-\end{itemize}
-
+standard methods: Random Centers, and K-Means++ [CITE]. In Random Centers, $K$
+samples are randomly chosen from the dataset to serve as the initial cluster
+centers. In K-Means++, $1$ sample is randomly chosen from the dataset to serve
+as the initial cluster center. Then, $K-1$ samples are iteratively selected,
+where the probability of a sample being chosen as a cluster center is the
+distance of the sample from previously chosen centers [CITE]. The K-Means
+algorithm is susceptible to initial starting cluster centers, where different
+initial values can result in a different classification.
+ 
 %------------------------------------------------
 
 \subsection{ISODATA Algorithm}
 
-ISODATA is another frequently used clustering algorithm and is similar to the
-K-Means algorithm. However, in the ISODATA algorithm, the number of cluster
-centers is determined dynamically, and it allows for a different number of
-cluster centers. In contrast, the K-Means algorithm assumes that the number of
-cluster centers is specified and fixated by the user. Some parameters such as
-initial clusters' means, the minimum number of patterns in each cluster,
-splitting and lumping parameters, and the number of iterations should be defined
-and specified by the user. Like the K-Means algorithm, the first steps are
-assignment all data points to the nearest cluster center and then recalculating
-the cluster centers by replacing the average data point in each cluster. In the
-next step, if a cluster does not reach the minimum number of clusters, the
-user-specified, we eliminate it. After that, we do the splitting or lumping
-process if their conditions are met. The cluster centers are updated based on
-the newly grouped patterns. We continue this process until the convergence
-occurs or the number of iterations is exceeded. The ISODATA algorithm is as
-follow: 
+ISODATA is another frequently used clustering algorithm and is based on the
+K-Means algorithm. Like K-Means, cluster centers are iteratively updated and
+reassigned to the samples in the dataset. However, ISODATA determines the number
+of clusters dynamically and allows for a different number of cluster centers. In
+contrast, the K-Means algorithm requires a fixed user-set parameter of the
+number of expected clusters. The advantage found within ISODATA allows for
+discovery of a different number of clusters, which is achieved through
+discarding clusters with a small number of member samples, and merging and
+splitting clusters that meet certain parameters. There are three main ISODATA
+parameters:
+
+\begin{itemize}
+\item $\theta n$ - minimum number of cluster members, which determines whether
+the cluster is discarded,
+\item $\theta e$ - maximum standard deviation allowed for a cluster, which
+determines whether the cluster is split,
+\item $\theta c$ - minimum distance between clusters, which determines whether
+two clusters are merged.
+\end{itemize}
+
+Additionally, the user must set $K$, the maximum number of clusters to generate.
+The ISODATA algorithm is briefly explained below:
 
 \begin{itemize}
 \item \textbf{Step 1:} Choose $K$ cluster centers from the data set.
-\item \textbf{Step 2:} Assign each element of the data set to the cluster based
+\item \textbf{Step 2:} Assign each element of the dataset to the cluster based
 on the minimum distance from the cluster center.
-\item \textbf{Step 3:} Re-calculate new cluster centers for each cluster after
-the assignment in step 2, e.g., computing the mean of all patterns assigned to
-each cluster.
-\item \textbf{Step 4:} Compare the number of patterns in each cluster against
-the user's number ($\theta n$)and discard small sets. 
-\item \textbf{Step 5:} Do splitting process based on splitting parameter
-($\theta e$) if this iteration is an odd-numbered iteration of the number of
-clusters is less than or equal to ½ the desired.
-\item \textbf{Step 6:} Do merging process based on merging parameter ($\theta
-c$)if this iteration is even-numbered, or if the number of clusters is greater
-than or equal to twice the number desired.
-\item \textbf{Step 7:} Start the process again at step 2 with new cluster
-centers after splitting or lumping.
-\item \textbf{Step 8:} If this is not the last iteration, start the process
-again at step 2. If this is the last iteration, then end the process.
+\item \textbf{Step 3:} Re-calculate new cluster centers for each cluster by
+computing the mean of all patterns assigned to each cluster.
+\item \textbf{Step 4:} Discard clusters that have fewer than ($\theta n$)
+members. If any clusters were discarded, move to \textbf{Step 7}.
+\item \textbf{Step 5:} If this iteration is an odd numbered iteration or the
+number of clusters is less than or equal to  $1/2 * K$, then split clusters
+which have a standard deviation in a dimension greater than ($\theta e$). Move
+to \textbf{Step 7}.
+\item \textbf{Step 6:} If this iteration is an even numbered iteration or the
+number of clusters is greater than or equal to $2 * K$, then merge clusters which
+have an intercluster distance less than ($\theta c$).
+\item \textbf{Step 7:} If this is not the last iteration, start the process
+again at step 2. If this is the last iteration or clustering convergence occurs,
+then end the process.
 \end{itemize}
+
+There are some disadvantages to the ISODATA algorithm. First, ISODATA is
+sensitive to the parameters $\theta n$, $\theta e$, and $\theta c$. These
+parameters should be fine-tuned for optimal performance based on the attributes
+of the dataset being tested. In addition, similar to K-Means, it is sensitive to
+initial cluster centers, although less so than K-Means due to the extra
+processes of discarding, splitting, and merging. The initial centroids can
+affect both the quality of clusters produced and the number of iterations
+required to converge [CITE].
 
 %------------------------------------------------
 
-\subsection{Proposed Method: ISO-S}
+\section{Proposed Method}
+
 The proposed clustering algorithm's objective is to improve the result we obtain
-from the ISODATA algorithm by decreasing the number of iterations needed for
-convergence. Inspired by the ISODATA algorithm, this capability is achieved
-using the splitting technique to update each iteration cluster centers. The main
-inputs for this algorithm are the arbitrary initial number of cluster centers
-and the processing parameters. First, the algorithm starts with the one cluster
-center and assign the patterns to this cluster center. Second, the new algorithm
-updates the cluster center by computing the mean of data points. Finally, the
-algorithm employs a splitting method to form new cluster centers. The cluster
-centers with the smallest number of members are discarded at the end of the
-maximum number of cluster centers we desire to obtain an odd number. We continue
-this process until we meet the convergence criteria: the maximum number of
-clusters desired or until we reach the maximum number of iterations. The
-algorithm is outlined below:
+from the ISODATA algorithm by targeting the initial cluster centers. Inspired by
+the ISODATA algorithm, Iterative Self-Organizing Data Split (ISODS) uses the
+splitting process from ISODATA to create the required initial cluster centers to
+use for the ISODATA algorithm. The inputs for the algorithm are the number of
+cluster centers $K$ as an integer, and the data to generate centers from. The
+algorithm starts by selecting $1$ sample as an initial cluster center. In the
+next step, each data is assigned to the cluster and the mean of the cluster is
+updated. Then, by the ISODATA splitting process, each cluster is split along the
+dimension with the highest standard deviation. The assignments for the new
+clusters are calculated based on distance and the centers are updated. This
+process is continued until either the number of clusters is greater than or
+equal to $K$. If the number of clusters is greater than $K$, the clusters with
+the fewest members are discarded one at a time, and the assignments and centers
+are updated after each rejection. The algorithm is outlined below:
+
+\begin{itemize}
+\item \textbf{Step 1:} Choose $1$ observation as a cluster center from the dataset.
+\item \textbf{Step 2:} Assign each element of the dataset to the cluster based
+on the minimum distance from the cluster center.
+\item \textbf{Step 3:} Re-calculate new cluster centers for each cluster by
+computing the mean of all patterns assigned to each cluster.
+\item \textbf{Step 4:} If the number of clusters is equal to $K$, then the
+process is terminated. If the number of clusters is greater than $K$, then the
+clusters with the fewest members is discarded, and the algorithm moves to
+\textbf{Step 2}.
+\item \textbf{Step 5:} Calculate the standard deviation of each cluster in each
+dimension. Then, split each cluster along the dimension with the greatest
+standard deviation.
+\end{itemize}
+
+This method began as a modified ISODATA process. However, the modification was
+unique in that there is a clear distinction from the proposed change and the
+beginning of the original process. Although more complex than other methods of
+generating initial cluster centers, this approach guarantees variance between
+clusters. As a result, ISODS can be used to generate clusters for other
+clustering algorithms, such as K-Means. In the next section, ISODS is applied to
+both ISODATA and K-Means on some benchmark UCI datasets [CITE] and compared with
+Random Centers and K-Means++ Centers.
 
 %------------------------------------------------
 \section{Results}
 
-\blindtext % Dummy text
+Due to the response of the ISODATA algorithm to the discarding, merging, and
+splitting parameters, these parameters should be carefully selected. Since the
+goal of this research is to explore the impact of initial cluster centers on
+ISODATA, we use a relatively simple approach for generating ISODATA parameters.
+Based on the available training data with included labels, each class is
+summarized with the mean and standard deviation of that class, as well as the
+number of members in each class. To determine $\theta n$, the minimum number of
+cluster members used for discarding, we find the class with the fewest members
+and use the number of members in that class as $\theta n$. For $\theta e$, the
+maximum standard deviation allowed for a cluster, we follow a similar approach
+and find the maximum standard deviation within a class. Finally, for $\theta c$,
+we calculate the distance between the means of each class, and use the minimum
+distance as $\theta c$.
+
+
 
 %------------------------------------------------
 
