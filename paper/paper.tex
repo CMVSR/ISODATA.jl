@@ -114,22 +114,24 @@ are evaluated using standard clustering evaluation parameters. \\ \\
 
 \section{Introduction}
 
-\lettrine[nindent=0em,lines=3]{R} emote sensing technology is used when
-the data collection takes place at a remote distance from the subject matter,
-such as the study of daily weather and long-term climate change, land cover
-monitoring, ecosystem modeling of vegetation, and so on. Multispectral imaging
-technology is one of the instruments for remote sensing used since the late
-1960s. However, multispectral imaging systems use a low number of spectral bands
-(three to six spectral bands in different systems). Increasing spectral
-resolution in the hyperspectral images (HSI) with several hundred spectral bands
-of the observational scene in a single acquisition makes it possible to acquire
-detailed examination of observational scenes. The ground-based version of
-hyperspectral images has gained immense interest. It has been applied to
-numerous electronic imaging applications, including food inspection, forensic
-science, medical surgery and diagnosis, and military applications. Because of
-the difficulty of obtaining prior knowledge in remote sensing studies,
-unsupervised classification and cluster analysis have great importance compared
-to supervised classification. 
+\lettrine[nindent=0em,lines=3]{R} emote sensing technology is used when the data
+collection takes place at a remote distance from the subject matter, such as the
+study of daily weather and long-term climate change, land cover monitoring,
+ecosystem modeling of vegetation, and so on \cite{Jensen1996,Mallapragada2018}.
+Multispectral imaging technology is one of the instruments for remote sensing
+used since the late 1960s \cite{Khan2018,Landgrebe1999}. However, multispectral
+imaging systems use a low number of spectral bands (three to six spectral bands
+in different systems). Increasing spectral resolution in the hyperspectral
+images (HSI) with several hundred spectral bands of the observational scene in a
+single acquisition makes it possible to acquire detailed examination of
+observational scenes \cite{Khan2018}. The ground-based version of hyperspectral
+images has gained immense interest. It has been applied to numerous electronic
+imaging applications, including food inspection, forensic science, medical
+surgery and diagnosis, and military applications
+\cite{Govender2009,Adam2009,Fischer2006,Carrasco2003}. Because of the difficulty
+of obtaining prior knowledge in remote sensing studies, unsupervised
+classification and cluster analysis have great importance compared to supervised
+classification \cite{Abbas2016}.
 
 Unsupervised learning is a machine learning technique used when the learning
 algorithm has no pre-existing labels and looks for patterns in the data set with
@@ -137,16 +139,17 @@ minimum human supervision and without external guidance. In contrast to
 supervised learning, where a training set of inputs and observations are given
 to the method, unsupervised learning uses only the inputs and should find an
 interesting pattern in the data set. Two main approaches are used in
-unsupervised learning, named principal component and cluster analysis. In the
-clustering method, unlabeled and unsorted data points are grouped and segmented
-according to similarities and differences to find structure in the inputs, group
-it into meaningful clusters, and understand the data set better. There are
-different algorithms for Clustering, such as K-Means, fuzzy C-Means, ISODATA,
-and so on. In the K-Means algorithm, the goal is to minimize the sum of the
-squared distances points have in the data set from its center. The problem with
-the K-Means algorithm is that it requires a priori knowledge about the number of
-classes in the data set, and choosing the cluster centers randomly may not
-result in optimal partitioning of the data set.
+unsupervised learning, named principal component \cite{Mallapragada2018} and
+cluster analysis \cite{Xu2015}. In the clustering method, unlabeled and unsorted
+data points are grouped and segmented according to similarities and differences
+to find structure in the inputs, group it into meaningful clusters, and
+understand the data set better. There are different algorithms for Clustering,
+such as K-Means, fuzzy C-Means, ISODATA \cite{Ball1965}, and so on. In the
+K-Means algorithm, the goal is to minimize the sum of the squared distances
+points have in the data set from its center. The problem with the K-Means
+algorithm is that it requires a priori knowledge about the number of classes in
+the data set, and choosing the cluster centers randomly may not result in
+optimal partitioning of the data set.
 
 One of the most popular clustering algorithms is called ISODATA clustering,
 based on the K-means algorithm with some variations. The ISODATA method's
@@ -155,14 +158,12 @@ algorithm uses splitting and merging forms for clusters. The ISODATA method
 allows starting from arbitrary cluster centers and obtains better partitioning
 results than the K-Means algorithm, but it is not entirely resilient to initial
 cluster centers. In this paper, a novel method using the ISODATA approach of
-splitting clusters to select high-quality initial cluster centers is proposed.
-This new method decreases the number of iterations and improves the overall
-performance of the algorithm.
+splitting clusters to select quality initial cluster centers is proposed.
 
-The paper is organized as follows: Section 2 introduces K-Means and ISODATA
-clustering algorithms. The new proposed algorithm is explained in Section 3. We
-present the experimental results in Section 4. Finally, Section 5 contains
-concluding remarks.
+% The paper is organized as follows: Section 2 introduces K-Means and ISODATA
+% clustering algorithms. The new proposed algorithm is explained in Section 3. We
+% present the experimental results in Section 4. Finally, Section 5 contains
+% concluding remarks.
 
 %------------------------------------------------
 
@@ -175,14 +176,14 @@ points assigned to other clusters. The user defines $K$, the number of expected
 clusters. Following is a description of the K-Means algorithm:
 
 \begin{itemize}
-\item \textbf{Step 1:} Choose $K$ cluster centers from the data set.
-\item \textbf{Step 2:} Assign each element of the data set to the cluster based
-on the minimum distance from the cluster center.
-\item \textbf{Step 3:} Re-calculate new cluster centers for each cluster after
-the assignment in \textbf{Step 2} by computing the mean of all patterns
-assigned to each cluster.
-\item \textbf{Step 4:} Repeat \textbf{Step 2 and Step 3} until clustering
-convergence occurs, or the set number of iterations is exceeded.
+  \item \textbf{Step 1:} Choose $K$ cluster centers from the data set.
+  \item \textbf{Step 2:} Assign each element of the data set to the cluster based
+        on the minimum distance from the cluster center.
+  \item \textbf{Step 3:} Re-calculate new cluster centers for each cluster after
+        the assignment in \textbf{Step 2} by computing the mean of all patterns
+        assigned to each cluster.
+  \item \textbf{Step 4:} Repeat \textbf{Step 2 and Step 3} until clustering
+        convergence occurs, or the set number of iterations is exceeded.
 \end{itemize}
 
 For selecting the initial cluster centers in \textbf{Step 1}, there are two
@@ -194,7 +195,7 @@ where the probability of a sample being chosen as a cluster center is the
 distance of the sample from previously chosen centers [CITE]. The K-Means
 algorithm is susceptible to initial starting cluster centers, where different
 initial values can result in a different classification.
- 
+
 %------------------------------------------------
 
 \subsection{ISODATA Algorithm}
@@ -211,35 +212,35 @@ splitting clusters that meet certain parameters. There are three main ISODATA
 parameters:
 
 \begin{itemize}
-\item $\theta n$ - minimum number of cluster members, which determines whether
-the cluster is discarded,
-\item $\theta e$ - maximum standard deviation allowed for a cluster, which
-determines whether the cluster is split,
-\item $\theta c$ - minimum distance between clusters, which determines whether
-two clusters are merged.
+  \item $\theta n$ - minimum number of cluster members, which determines whether
+        the cluster is discarded,
+  \item $\theta e$ - maximum standard deviation allowed for a cluster, which
+        determines whether the cluster is split,
+  \item $\theta c$ - minimum distance between clusters, which determines whether
+        two clusters are merged.
 \end{itemize}
 
 Additionally, the user must set $K$, the maximum number of clusters to generate.
 The ISODATA algorithm is briefly explained below:
 
 \begin{itemize}
-\item \textbf{Step 1:} Choose $K$ cluster centers from the data set.
-\item \textbf{Step 2:} Assign each element of the dataset to the cluster based
-on the minimum distance from the cluster center.
-\item \textbf{Step 3:} Re-calculate new cluster centers for each cluster by
-computing the mean of all patterns assigned to each cluster.
-\item \textbf{Step 4:} Discard clusters that have fewer than ($\theta n$)
-members. If any clusters were discarded, move to \textbf{Step 7}.
-\item \textbf{Step 5:} If this iteration is an odd numbered iteration or the
-number of clusters is less than or equal to  $1/2 * K$, then split clusters
-which have a standard deviation in a dimension greater than ($\theta e$). Move
-to \textbf{Step 7}.
-\item \textbf{Step 6:} If this iteration is an even numbered iteration or the
-number of clusters is greater than or equal to $2 * K$, then merge clusters which
-have an intercluster distance less than ($\theta c$).
-\item \textbf{Step 7:} If this is not the last iteration, start the process
-again at step 2. If this is the last iteration or clustering convergence occurs,
-then end the process.
+  \item \textbf{Step 1:} Choose $K$ cluster centers from the data set.
+  \item \textbf{Step 2:} Assign each element of the dataset to the cluster based
+        on the minimum distance from the cluster center.
+  \item \textbf{Step 3:} Re-calculate new cluster centers for each cluster by
+        computing the mean of all patterns assigned to each cluster.
+  \item \textbf{Step 4:} Discard clusters that have fewer than ($\theta n$)
+        members. If any clusters were discarded, move to \textbf{Step 7}.
+  \item \textbf{Step 5:} If this iteration is an odd numbered iteration or the
+        number of clusters is less than or equal to  $1/2 * K$, then split clusters
+        which have a standard deviation in a dimension greater than ($\theta e$). Move
+        to \textbf{Step 7}.
+  \item \textbf{Step 6:} If this iteration is an even numbered iteration or the
+        number of clusters is greater than or equal to $2 * K$, then merge clusters which
+        have an intercluster distance less than ($\theta c$).
+  \item \textbf{Step 7:} If this is not the last iteration, start the process
+        again at step 2. If this is the last iteration or clustering convergence occurs,
+        then end the process.
 \end{itemize}
 
 There are some disadvantages to the ISODATA algorithm. First, ISODATA is
@@ -272,18 +273,18 @@ the fewest members are discarded one at a time, and the assignments and centers
 are updated after each rejection. The algorithm is outlined below:
 
 \begin{itemize}
-\item \textbf{Step 1:} Choose $1$ observation as a cluster center from the dataset.
-\item \textbf{Step 2:} Assign each element of the dataset to the cluster based
-on the minimum distance from the cluster center.
-\item \textbf{Step 3:} Re-calculate new cluster centers for each cluster by
-computing the mean of all patterns assigned to each cluster.
-\item \textbf{Step 4:} If the number of clusters is equal to $K$, then the
-process is terminated. If the number of clusters is greater than $K$, then the
-clusters with the fewest members is discarded, and the algorithm moves to
-\textbf{Step 2}.
-\item \textbf{Step 5:} Calculate the standard deviation of each cluster in each
-dimension. Then, split each cluster along the dimension with the greatest
-standard deviation.
+  \item \textbf{Step 1:} Choose $1$ observation as a cluster center from the dataset.
+  \item \textbf{Step 2:} Assign each element of the dataset to the cluster based
+        on the minimum distance from the cluster center.
+  \item \textbf{Step 3:} Re-calculate new cluster centers for each cluster by
+        computing the mean of all patterns assigned to each cluster.
+  \item \textbf{Step 4:} If the number of clusters is equal to $K$, then the
+        process is terminated. If the number of clusters is greater than $K$, then the
+        clusters with the fewest members is discarded, and the algorithm moves to
+        \textbf{Step 2}.
+  \item \textbf{Step 5:} Calculate the standard deviation of each cluster in each
+        dimension. Then, split each cluster along the dimension with the greatest
+        standard deviation.
 \end{itemize}
 
 This method began as a modified ISODATA process. However, the modification was
@@ -291,9 +292,7 @@ unique in that there is a clear distinction from the proposed change and the
 beginning of the original process. Although more complex than other methods of
 generating initial cluster centers, this approach guarantees variance between
 clusters. As a result, ISODS can be used to generate clusters for other
-clustering algorithms, such as K-Means. In the next section, ISODS is applied to
-both ISODATA and K-Means on some benchmark UCI datasets [CITE] and compared with
-Random Centers and K-Means++ Centers.
+clustering algorithms, such as K-Means.
 
 %------------------------------------------------
 \section{Results}
@@ -304,14 +303,27 @@ goal of this research is to explore the impact of initial cluster centers on
 ISODATA, we use a relatively simple approach for generating ISODATA parameters.
 Based on the available training data with included labels, each class is
 summarized with the mean and standard deviation of that class, as well as the
-number of members in each class. To determine $\theta n$, the minimum number of
-cluster members used for discarding, we find the class with the fewest members
-and use the number of members in that class as $\theta n$. For $\theta e$, the
-maximum standard deviation allowed for a cluster, we follow a similar approach
-and find the maximum standard deviation within a class. Finally, for $\theta c$,
-we calculate the distance between the means of each class, and use the minimum
-distance as $\theta c$.
+number of members in each class. Typically, since we are working with
+unsupervised learning algorithms, class information may not be available.
 
+To determine $\theta n$, the minimum number of cluster members used for
+discarding, we find the class with the fewest members and use the number of
+members in that class as $\theta n$. For $\theta e$, the maximum standard
+deviation allowed for a cluster, we follow a similar approach and find the
+maximum standard deviation within a class. Finally, for $\theta c$, we calculate
+the distance between the means of each class, and use the minimum distance as
+$\theta c$.
+
+For experiments 1 and 2, we explore applying ISODS to ISODATA and K-Means by
+using benchmark UCI datasets Iris, Wine, and Glass. We also show results from
+applying Random Centers and K-Means++ Centers. To evaluate the cluster results,
+external cluster validation measures are used. We utilize pair-counting measures
+which rely on counting matching pairs between two sets of data to determine
+agreement and disagreement \cite{Rezaei2016}. The pair-counting measures applied
+are \textit{rand index} (RI - agreement probability), \textit{adjusted rand
+  index} (ARI), \textit{mirkin's index} (MI - disagreement probability), and
+\textit{hubert's index} (HI - $P(agree) - P(disagree)$)\cite{Hubert1985}
+\cite{Meila2003}.
 
 
 %------------------------------------------------
@@ -320,7 +332,6 @@ distance as $\theta c$.
 
 \subsection{Subsection One}
 
-A statement requiring citation \cite{Figueredo:2009dg}.
 \blindtext % Dummy text
 
 \subsection{Subsection Two}
@@ -331,15 +342,8 @@ A statement requiring citation \cite{Figueredo:2009dg}.
 %	REFERENCE LIST
 %----------------------------------------------------------------------------------------
 
-\begin{thebibliography}{99} % Bibliography - this is intentionally simple in this template
-
-\bibitem[Figueredo and Wolf, 2009]{Figueredo:2009dg}
-Figueredo, A.~J. and Wolf, P. S.~A. (2009).
-\newblock Assortative pairing and life history strategy - a cross-cultural
-  study.
-\newblock {\em Human Nature}, 20:317--330.
- 
-\end{thebibliography}
+\bibliographystyle{unsrt}
+\bibliography{paper}
 
 %----------------------------------------------------------------------------------------
 
