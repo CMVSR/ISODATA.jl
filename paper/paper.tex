@@ -1,6 +1,10 @@
 
 \documentclass[a4paper,10pt]{article}
 \usepackage{graphicx}
+\usepackage{caption}
+\usepackage{subcaption}
+
+\graphicspath{ {./img/} }
 \begin{document}
 
 \title{\bf ISODS: An ISODATA-Based Initial Centroid Algorithm}
@@ -223,9 +227,7 @@ clustering algorithms, such as K-Means.
 
 % =========================================================================== %
 
-\section{Results}
-
-\begin{table}
+\begin{table}[ht]
       \begin{tabular}{ |p{1.25cm}||p{1.25cm} p{1.25cm} p{1.25cm} p{1.25cm} p{1.25cm} p{1.25cm}|}
             \hline
             \multicolumn{7}{|c|}{\textbf{ISODATA}}                               \\
@@ -274,6 +276,8 @@ clustering algorithms, such as K-Means.
       \label{tab:ucitable}
 \end{table}
 
+\section{Results}
+
 Due to the response of the ISODATA algorithm to the discarding, merging, and
 splitting parameters, these parameters should be carefully selected. Since the
 goal of this research is to explore the impact of initial cluster centers on
@@ -315,10 +319,93 @@ to cluster assignments, RI can serve as an estimation of the accuracy. ARI is
 similar to the RI, though it is corrected for chance and thus does not count
 randomly generated labels \cite{Rand1971}.
 
+\begin{figure}[ht]
+      \centering
+      \begin{subfigure}[b]{0.4\textwidth}
+            \centering
+            \includegraphics[width=\linewidth]{salinasgt.png}
+            \caption{Salinas-A Ground Truth}
+            \label{fig:salinasgt}
+      \end{subfigure}
+      \begin{subfigure}[b]{0.4\textwidth}
+            \centering
+            \includegraphics[width=\linewidth]{risodata.png}
+            \caption{Random Centers (ARI=0.797)}
+            \label{fig:salinasr}
+      \end{subfigure}\hfill
+      \centering
+      \begin{subfigure}[b]{0.4\textwidth}
+            \centering
+            \includegraphics[width=\linewidth]{kisodata.png}
+            \caption{KM++ Centers (ARI=0.781)}
+            \label{fig:salinask}
+      \end{subfigure}
+      \begin{subfigure}[b]{0.4\textwidth}
+            \centering
+            \includegraphics[width=\linewidth]{iisodata.png}
+            \caption{ISODS Centers (ARI=0.758)}
+            \label{fig:salinasi}
+      \end{subfigure}\hfill \caption{Heatmap showing cluster assignments of each
+            pixel using ISODATA with different initial cluster center methods.}
+      \label{fig:salinas}
+\end{figure}
+
+Following the results on the benchmark datasets, we applied ISODATA to the
+Salinas-A hyperspectral image dataset \cite{Salinas}. Salinas-A is a small
+subscene of the Salinas image. It has a size of $86$ pixels by $83$ pixels, each
+pixel contains $224$ bands, and each pixel is assigned to $1$ of $6$ classes,
+disregarding the background. Due to the large number of dimensions in this
+dataset, prinicipal component analysis (PCA) is used to extract features
+\cite{Rodarmel2002}. In this experimental setup, we use $3$ prinicipal
+components as the input to the model. We utilize the same 80/20 test-train split
+as the previous experiment and Z-Score Normalize the data. Additionally, the
+same ISODATA parameter selection approach is employed. Then, we run ISODATA for
+$1000$ iterations using ISODS, K-Means++ Centers, and Random Centers. We save
+the best performing model (based on test data performance) for each initial
+cluster center approach and fit each pixel to the original dataset to obtain the
+pictures shown in Figure \ref{fig:salinas}. Finally, the external cluster
+validation measures are shown in Table \ref{tab:salinastable}. 
+
+\begin{table}[ht]
+      \begin{tabular}{ |p{1.25cm}||p{1.25cm} p{1.25cm} p{1.25cm} p{1.25cm} p{1.25cm} p{1.25cm}|}
+            \hline
+            \multicolumn{7}{|c|}{\textbf{ISODATA} - \textit{Salinas-A}}        \\
+            \hline
+            Init. & Iter. & Clusters & ARI            & RI    & MI    & HI     \\
+            \hline
+            \multicolumn{7}{|c|}{\textit{Average}}                             \\[1ex]
+            ISODS & 2.772 & 2.42     & \textbf{0.156} & 0.388 & 0.612 & -0.224 \\
+            KM++  & 3.177 & 1.097    & 0.019          & 0.228 & 0.772 & -0.544 \\
+            Rand  & 3.693 & 1.584    & 0.084          & 0.308 & 0.691 & -0.383 \\
+            \hline
+            \multicolumn{7}{|c|}{\textit{Best}}                                \\[1ex]
+            ISODS & 2     & 6        & 0.758          & 0.921 & 0.078 & 0.842  \\
+            KM++  & 8     & 6        & 0.781          & 0.930 & 0.070 & 0.860  \\
+            Rand  & 14    & 6        & \textbf{0.798} & 0.933 & 0.066 & 0.867  \\
+            \hline
+      \end{tabular}
+      \caption{Salinas-A dataset average and best results over 1000 iterations
+            of ISODATA comparing three different initial cluster center
+            algorithms (\textit{Init.}). Results in the table contain
+            information on iterations required (\textit{Iter.}), number of
+            clusters created (\textit{Clusters}), and validity measures.}
+      \label{tab:salinastable}
+\end{table}
+
 % =========================================================================== %
 
 \section{Conclusion}
-Put Conclusion here.
+This study presents a method for generating initial cluster centers based on a
+splitting approach, ISODS. We tested ISODS on bechmark datasets as well as the
+Salinas-A hyperspectral image dataset. Both tests on average shows the
+performance of ISODS using external cluster validation measures, especially on
+the \textit{adjusted rand index} measure. Additonally, ISODS may decrease the
+number of iterations required for a clustering algorithm such as ISODATA or
+K-Means to converge. However, due to the complexity of the ISODS approach,
+specifically calculating the means of the clusters, the number of iterations
+taken by ISODS should be considered. When used in conjunction with ISODATA,
+ISODS also shows an average number of clusters generated closer to the expected
+output.
 
 % =========================================================================== %
 
@@ -328,10 +415,6 @@ at Kennesaw State University. We also want to thank our Laboratory for Machine
 Vision and Security Research for providing us resources and mentoring.
 
 \vspace{5mm}
-
-\begin{center}
-      {\large \bf References}
-\end{center}
 
 \bibliographystyle{unsrt}
 \bibliography{paper}
