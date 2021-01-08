@@ -4,34 +4,31 @@
 \begin{document}
 
 \title{\bf ISODS: An ISODATA-Based Initial Centroid Algorithm}
-\author{Noah Gardner$^1$,
-      Sahar Yarmohammadtoosky$^2$, \\
-      Anthony Phan$^3$,
-      and Chih-Cheng Hung$^4$\\[1ex]
-      \sl \small Kennesaw State University,
-      Marietta, GA, USA$^{1, 3, 4}$\\
-      \sl \small Iran University of Science and Technology,
-      Tehran, Iran$^2$\\[1ex]
-      \small $^1$ngardn10@students.kennesaw.edu, 
-      \small $^2$yarmohamadishr@gmail.com, \\
-      \small $^3$aphan5@students.kennesaw.edu,
-      \small $^4$chung1@kennesaw.edu, \\}
+\author{Noah Gardner$^1$, Sahar Yarmohammadtoosky$^2$, \\
+      Anthony Phan$^3$, and Chih-Cheng Hung$^4$\\[1ex]
+      \sl \small Kennesaw State University, Marietta, GA, USA$^{1, 3, 4}$\\
+      \sl \small Iran University of Science and Technology, Tehran,
+      Iran$^2$\\[1ex]
+      \small $^1$ngardn10@students.kennesaw.edu, \small
+      $^2$yarmohamadishr@gmail.com, \\
+      \small $^3$aphan5@students.kennesaw.edu, \small $^4$chung1@kennesaw.edu,
+      \\}
 \date{}
 \maketitle
 
 \begin{abstract}
       \noindent 
-      Iterative Self-Organizing Data Analysis Technique (ISODATA) is a clustering
-      algorithm based on K-Means that intends to find the correct number of
-      clusters through merging and splitting. Compared to K-Means, the ISODATA
-      algorithm should be resilient to initial cluster centers. However, ISODATA
-      is also sensitive to initial cluster centers which impacts the performance
-      of the algorithm. This work proposes using the ISODATA approach of splitting
-      clusters to select quality initial cluster centers. The proposed approach is
-      evaluated on several benchmark UCI datasets as well as the Salinas-A
-      hyperspectral image dataset. The results are evaluated using standard
-      clustering evaluation parameters. \\
-      {\bf Keywords :} Clustering, ISODATA, Initial Centroid, Remote Sensing
+      Iterative Self-Organizing Data Analysis Technique (ISODATA) is a
+      clustering algorithm based on K-Means that intends to find the correct
+      number of clusters through merging and splitting. Compared to K-Means, the
+      ISODATA algorithm should be resilient to initial cluster centers. However,
+      ISODATA is also sensitive to initial cluster centers which impacts the
+      performance of the algorithm. This work proposes using the ISODATA
+      approach of splitting clusters to select quality initial cluster centers.
+      The proposed approach is evaluated on several benchmark UCI datasets as
+      well as the Salinas-A hyperspectral image dataset. The results are
+      evaluated using standard clustering evaluation parameters. \\
+      {\bf Keywords :} Clustering, ISODATA, Initial Centroids, Remote Sensing
 \end{abstract}
 
 
@@ -153,45 +150,48 @@ The ISODATA algorithm is briefly explained below:
       \item \textbf{Step 1:} Choose $K$ cluster centers from the data set.
       \item \textbf{Step 2:} Assign each element of the dataset to the cluster
             based on the minimum distance from the cluster center.
-      \item \textbf{Step 3:} Re-calculate new cluster centers for each cluster by
-            computing the mean of all patterns assigned to each cluster.
+      \item \textbf{Step 3:} Re-calculate new cluster centers for each cluster
+            by computing the mean of all patterns assigned to each cluster.
       \item \textbf{Step 4:} Discard clusters that have fewer than ($\theta n$)
             members. If any clusters were discarded, move to \textbf{Step 7}.
-      \item \textbf{Step 5:} If this iteration is an odd numbered iteration or the
-            number of clusters is less than or equal to  $1/2 * K$, then split
-            clusters which have a standard deviation in a dimension greater than
-            ($\theta e$). Move to \textbf{Step 7}.
+      \item \textbf{Step 5:} If this iteration is an odd numbered iteration or
+            the number of clusters is less than or equal to  $1/2 * K$, then
+            split clusters which have a standard deviation in a dimension
+            greater than ($\theta e$). Move to \textbf{Step 7}.
       \item \textbf{Step 6:} If this iteration is an even numbered iteration or
-            the number of clusters is greater than or equal to $2 * K$, then merge
-            clusters which have an intercluster distance less than ($\theta c$).
-      \item \textbf{Step 7:} If this is not the last iteration, start the process
-            again at step 2. If this is the last iteration or clustering
+            the number of clusters is greater than or equal to $2 * K$, then
+            merge clusters which have an intercluster distance less than
+            ($\theta c$).
+      \item \textbf{Step 7:} If this is not the last iteration, start the
+            process again at step 2. If this is the last iteration or clustering
             convergence occurs, then end the process.
 \end{itemize}
 
-There are some disadvantages to the ISODATA algorithm. First, ISODATA is
-sensitive to the parameters $\theta n$, $\theta e$, and $\theta c$. These
-parameters should be fine-tuned for optimal performance based on the attributes
-of the dataset being tested. In addition, similar to K-Means, it is sensitive to
-initial cluster centers, although less so than K-Means due to the extra
-processes of discarding, splitting, and merging. The initial centroids can
-affect both the quality of clusters produced and the number of iterations
-required to converge [CITE].
+There are some disadvantages to the ISODATA algorithm. First, it is sensitive to
+the parameters $\theta n$, $\theta e$, and $\theta c$. These parameters should
+be fine-tuned for optimal performance based on the attributes of the dataset
+being tested. In addition, similar to K-Means, it is sensitive to initial
+cluster centers, although less so than K-Means due to the extra processes of
+discarding, splitting, and merging. The initial centroids can affect both the
+quality of clusters produced and the number of iterations required to converge
+      [CITE].
 
 % =========================================================================== %
 
 \section{Proposed Method}
 
 The proposed clustering algorithm's objective is to improve the result we obtain
-from the ISODATA algorithm by targeting the initial cluster centers. Inspired by
-the ISODATA algorithm, Iterative Self-Organizing Data Split (ISODS) uses the
-splitting process from ISODATA to create the required initial cluster centers to
-use for the ISODATA algorithm. The inputs for the algorithm are the number of
-cluster centers $K$ as an integer, and the data to generate centers from. The
-algorithm starts by selecting $1$ sample as an initial cluster center. In the
-next step, each data is assigned to the cluster and the mean of the cluster is
-updated. Then, by the ISODATA splitting process, each cluster is split along the
-dimension with the highest standard deviation. The assignments for the new
+from the clustering algorithms by targeting the initial cluster centers.
+Inspired by the ISODATA algorithm, Iterative Self-Organizing Data Split (ISODS)
+uses the splitting process from ISODATA to create the required initial cluster
+centers to use for a clustering algorithm. The inputs for the algorithm are the
+number of cluster centers $K$ as an integer, and the data to generate centers
+from. 
+
+The algorithm starts by selecting $1$ sample as an initial cluster center. In
+the next step, each data is assigned to the cluster and the mean of the cluster
+is updated. Then, by the ISODATA splitting process, each cluster is split along
+the dimension with the highest standard deviation. The assignments for the new
 clusters are calculated based on distance and the centers are updated. This
 process is continued until either the number of clusters is greater than or
 equal to $K$. If the number of clusters is greater than $K$, the clusters with
@@ -203,15 +203,15 @@ are updated after each rejection. The algorithm is outlined below:
             dataset.
       \item \textbf{Step 2:} Assign each element of the dataset to the cluster
             based on the minimum distance from the cluster center.
-      \item \textbf{Step 3:} Re-calculate new cluster centers for each cluster by
-            computing the mean of all patterns assigned to each cluster.
+      \item \textbf{Step 3:} Re-calculate new cluster centers for each cluster
+            by computing the mean of all patterns assigned to each cluster.
       \item \textbf{Step 4:} If the number of clusters is equal to $K$, then the
-            process is terminated. If the number of clusters is greater than $K$,
-            then the clusters with the fewest members is discarded, and the
+            process is terminated. If the number of clusters is greater than
+            $K$, then the clusters with the fewest members is discarded, and the
             algorithm moves to \textbf{Step 2}.
       \item \textbf{Step 5:} Calculate the standard deviation of each cluster in
-            each dimension. Then, split each cluster along the dimension with the
-            greatest standard deviation.
+            each dimension. Then, split each cluster along the dimension with
+            the greatest standard deviation.
 \end{itemize}
 
 This method began as a modified ISODATA process. However, the modification was
@@ -224,6 +224,55 @@ clustering algorithms, such as K-Means.
 % =========================================================================== %
 
 \section{Results}
+
+\begin{table}
+      \begin{tabular}{ |p{1.25cm}||p{1.25cm} p{1.25cm} p{1.25cm} p{1.25cm} p{1.25cm} p{1.25cm}|}
+            \hline
+            \multicolumn{7}{|c|}{\textbf{ISODATA}}                               \\
+            \hline
+            Init. & Iter.  & Clusters & ARI             & RI    & MI    & HI     \\
+            \hline
+            \multicolumn{7}{|c|}{\textit{Iris}}                                  \\[1ex]
+            ISODS & 13.46  & 2.599    & \textbf{0.646}  & 0.826 & 0.173 & 0.653  \\
+            KM++  & 15.43  & 2.544    & 0.628           & 0.816 & 0.184 & 0.631  \\
+            Rand  & 11.90  & 2.41     & 0.607           & 0.802 & 0.198 & 0.604  \\
+            \hline
+            \multicolumn{7}{|c|}{\textit{Glass (Normalized)}}                    \\[1ex]
+            ISODS & 3.19   & 1.066    & \textbf{0.0018} & 0.266 & 0.734 & -0.468 \\
+            KM++  & 4.02   & 1.028    & 0.0011          & 0.265 & 0.735 & -0.470 \\
+            Rand  & 3.69   & 1.055    & 0.0013          & 0.266 & 0.733 & -0.467 \\
+            \hline
+            \multicolumn{7}{|c|}{\textit{Wine}}                                  \\[1ex]
+            ISODS & 9.16   & 1.836    & \textbf{0.313}  & 0.618 & 0.382 & 0.236  \\
+            KM++  & 8.76   & 1.816    & 0.307           & 0.612 & 0.388 & 0.224  \\
+            Rand  & 9.26   & 1.810    & 0.304           & 0.608 & 0.391 & 0.217  \\
+            \hline 
+            \multicolumn{7}{|c|}{\textbf{K-Means}}                               \\
+            \hline
+            \multicolumn{7}{|c|}{\textit{Iris}}                                  \\[1ex]
+            ISODS & 2.29   & 3        & \textbf{0.623}  & 0.833 & 0.167 & 0.667  \\
+            KM++  & 4.149  & 3        & 0.584           & 0.811 & 0.189 & 0.621  \\
+            Rand  & 29.402 & 3        & 0.569           & 0.797 & 0.203 & 0.593  \\
+            \hline
+            \multicolumn{7}{|c|}{\textit{Glass (Normalized)}}                    \\[1ex]
+            ISODS & 5.651  & 6        & 0.164           & 0.665 & 0.335 & 0.329  \\
+            KM++  & 4.866  & 6        & \textbf{0.173}  & 0.643 & 0.357 & 0.285  \\
+            Rand  & 77.178 & 6        & 0.151           & 0.634 & 0.366 & 0.268  \\
+            \hline
+            \multicolumn{7}{|c|}{\textit{Wine}}                                  \\[1ex]
+            ISODS & 3.145  & 3        & \textbf{0.882}  & 0.947 & 0.053 & 0.895  \\
+            KM++  & 5.388  & 3        & 0.839           & 0.926 & 0.074 & 0.851  \\
+            Rand  & 24.775 & 3        & 0.834           & 0.920 & 0.080 & 0.840  \\
+            \hline
+      \end{tabular}
+      \caption{UCI benchmark dataset results averaged over 1000 iterations of
+            ISODATA and K-Means comparing three different initial cluster center
+            algorithms (\textit{Init.}). Results in the table contain
+            information on average iterations required (\textit{Iter.}), average
+            number of clusters created (\textit{Clusters}), and validity
+            measures.}
+      \label{tab:ucitable}
+\end{table}
 
 Due to the response of the ISODATA algorithm to the discarding, merging, and
 splitting parameters, these parameters should be carefully selected. Since the
@@ -240,18 +289,31 @@ members in that class as $\theta n$. For $\theta e$, the maximum standard
 deviation allowed for a cluster, we follow a similar approach and find the
 maximum standard deviation within a class. Finally, for $\theta c$, we calculate
 the distance between the means of each class, and use the minimum distance as
-$\theta c$.
+$\theta c$. 
 
-For experiments 1 and 2, we explore applying ISODS to ISODATA and K-Means by
-using benchmark UCI datasets Iris, Wine, and Glass. We also show results from
-applying Random Centers and K-Means++ Centers. To evaluate the cluster results,
-external cluster validation measures are used. We utilize pair-counting measures
-which rely on counting matching pairs between two sets of data to determine
-agreement and disagreement \cite{Rezaei2016}. The pair-counting measures applied
-are \textit{rand index} (RI - agreement probability), \textit{adjusted rand
-      index} (ARI), \textit{mirkin's index} (MI - disagreement probability), and
-\textit{hubert's index} (HI - $P(agree) - P(disagree)$)\cite{Hubert1985,
-      Meila2003}.
+For the first experimental results shown in Table \ref{tab:ucitable}, we explore
+applying ISODS to ISODATA and K-Means by using benchmark UCI \textit{Iris,}
+\textit{Wine,} and \textit{Glass} datasets \cite{Dua2019}. We also show results
+from applying Random Centers and K-Means++ Centers. For the \textit{Glass}
+dataset, the data was Z-Score normalized (based on Z-Score of the training data)
+because ISODATA can have problems converging on the raw dataset. We used $80\%$
+of the data for training and $20\%$ of the data for testing to evaluate the
+models. Following standard practice, the models were trained on the training
+data, then fit to the test data. For the ISODATA parameters, we used the
+approach of summarizing the class data based on the information in the training
+data. The output labels (cluster assignments) were compared to the ground truth
+labels contained in the test data using pair-counting measures. 
+
+To evaluate the cluster results, external cluster validation measures are used.
+We utilize pair-counting measures which rely on counting matching pairs between
+two sets of data to determine agreement and disagreement \cite{Rezaei2016}. The
+pair-counting measures applied are \textit{rand index} (RI - agreement
+probability), \textit{adjusted rand index} (ARI), \textit{mirkin's index} (MI -
+disagreement probability), and \textit{hubert's index} (HI - $(P(agree)$ -
+$P(disagree))$) \cite{Hubert1985, Meila2003}. When comparing ground truth labels
+to cluster assignments, RI can serve as an estimation of the accuracy. ARI is
+similar to the RI, though it is corrected for chance and thus does not count
+randomly generated labels \cite{Rand1971}.
 
 % =========================================================================== %
 
@@ -261,7 +323,9 @@ Put Conclusion here.
 % =========================================================================== %
 
 \subsection*{Acknowledgements}
-Put Acknowledgements here.
+This research was supported by the College of Computing and Software Engineering
+at Kennesaw State University. We also want to thank our Laboratory for Machine
+Vision and Security Research for providing us resources and mentoring.
 
 \vspace{5mm}
 
