@@ -1,133 +1,59 @@
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Journal Article
-% LaTeX Template
-% Version 1.4 (15/5/16)
-%
-% This template has been downloaded from:
-% http://www.LaTeXTemplates.com
-%
-% Original author:
-% Frits Wenneker (http://www.howtotex.com) with extensive modifications by
-% Vel (vel@LaTeXTemplates.com)
-%
-% License:
-% CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
-%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%----------------------------------------------------------------------------------------
-%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
-%----------------------------------------------------------------------------------------
-
-\documentclass[twoside,twocolumn]{article}
-
-\usepackage{blindtext} % Package to generate dummy text throughout this template 
-
-\usepackage[sc]{mathpazo} % Use the Palatino font
-\usepackage[T1]{fontenc} % Use 8-bit encoding that has 256 glyphs
-\linespread{1.05} % Line spacing - Palatino needs more space between lines
-\usepackage{microtype} % Slightly tweak font spacing for aesthetics
-
-\usepackage[english]{babel} % Language hyphenation and typographical rules
-
-\usepackage[hmarginratio=1:1,top=32mm,columnsep=20pt]{geometry} % Document margins
-\usepackage[hang, small,labelfont=bf,up,textfont=it,up]{caption} % Custom captions under/above floats in tables or figures
-\usepackage{booktabs} % Horizontal rules in tables
-
-\usepackage{lettrine} % The lettrine is the first enlarged letter at the beginning of the text
-
-\usepackage{enumitem} % Customized lists
-\setlist[itemize]{noitemsep} % Make itemize lists more compact
-
-\usepackage{abstract} % Allows abstract customization
-\renewcommand{\abstractnamefont}{\normalfont\bfseries} % Set the "Abstract" text to bold
-\renewcommand{\abstracttextfont}{\normalfont\small} % Set the abstract itself to small italic text
-
-\usepackage{titlesec} % Allows customization of titles
-\renewcommand\thesection{\Roman{section}} % Roman numerals for the sections
-\renewcommand\thesubsection{\Roman{subsection}} % roman numerals for subsections
-\titleformat{\section}[block]{\large\scshape\centering}{\thesection.}{1em}{} % Change the look of the section titles
-\titleformat{\subsection}[block]{\large}{\thesubsection.}{1em}{} % Change the look of the section titles
-
-\usepackage{fancyhdr} % Headers and footers
-\pagestyle{fancy} % All pages have headers and footers
-\fancyhead{} % Blank out the default header
-\fancyfoot{} % Blank out the default footer
-\fancyhead[C]{Running title $\bullet$ May 2016 $\bullet$ Vol. XXI, No. 1} % Custom header text
-\fancyfoot[RO,LE]{\thepage} % Custom footer text
-
-\usepackage{titling} % Customizing the title section
-
-\usepackage{hyperref} % For hyperlinks in the PDF
-
-%----------------------------------------------------------------------------------------
-%	TITLE SECTION
-%----------------------------------------------------------------------------------------
-
-\setlength{\droptitle}{-4\baselineskip} % Move the title up
-
-\pretitle{\begin{center}\Huge\bfseries} % Article title formatting
-\posttitle{\end{center}} % Article title closing formatting
-\title{ISODS: An ISODATA-Based Initial Centroid Algorithm} % Article title
-\author{%
-  \textsc{
-    Noah Gardner$^1$\thanks{ngardn10@students.kennesaw.edu}, 
-    Sahar Yarmohammadtoosky$^2$\thanks{yarmohamadishr@gmail.com},
-    }\\[1ex]
-  \textsc{
-    Anthony Phan$^1$\thanks{aphan5@students.kennesaw.edu},
-    Chih-Cheng Hung$^1$\thanks{chung1@students.kennesaw.edu}} \\[1ex]
-  \normalsize $^1$Kennesaw State University \\
-  \normalsize College of Computing and Software Engineering \\
-  \normalsize Marietta, GA, USA \\[1ex]
-  \normalsize $^2$Iran University of Science and Technology \\
-  \normalsize Tehran, Iran
-}
-\date{} % Leave empty to omit a date
-
-\renewcommand{\maketitlehookd}{%
-\begin{abstract}
-\noindent 
-Iterative Self-Organizing Data Analysis Technique (ISODATA) is a clustering
-algorithm based on K-Means that intends to find the correct number of clusters
-through merging and splitting. Compared to K-Means, the ISODATA algorithm should
-be resilient to initial cluster centers. However, ISODATA is also sensitive to
-initial cluster centers which impacts the performance of the algorithm. This
-work proposes using the ISODATA approach of splitting clusters to select quality
-initial cluster centers. The proposed approach is evaluated on several benchmark
-UCI datasets as well as the Salinas-A hyperspectral image dataset. The results
-are evaluated using standard clustering evaluation parameters. \\ \\
-\textit{\textbf{Keywords:} Clustering, ISODATA, Initial Centroid, Remote Sensing} \\
-\end{abstract}
-}
-
-%----------------------------------------------------------------------------------------
-
+\documentclass[a4paper,10pt]{article}
+\usepackage{graphicx}
 \begin{document}
 
-% Print the title
+\title{\bf Patent Duration, Innovative Performance, and Technology Diffusion}
+\author{Noah Gardner$^1$,
+      Sahar Yarmohammadtoosky$^2$, \\
+      Anthony Phan$^3$,
+      and Chih-Cheng Hung$^4$\\[1ex]
+      \sl \small Kennesaw State University,
+      Marietta, GA, USA$^{1, 3, 4}$\\
+      \sl \small Iran University of Science and Technology,
+      Tehran, Iran$^2$\\[1ex]
+      \small $^1$ngardn10@students.kennesaw.edu, 
+      \small $^2$yarmohamadishr@gmail.com, \\
+      \small $^3$aphan5@students.kennesaw.edu,
+      \small $^4$chung1@kennesaw.edu, \\}
+\date{}
 \maketitle
 
-%----------------------------------------------------------------------------------------
-%	ARTICLE CONTENTS
-%----------------------------------------------------------------------------------------
+\begin{abstract}
+      \noindent 
+      Iterative Self-Organizing Data Analysis Technique (ISODATA) is a clustering
+      algorithm based on K-Means that intends to find the correct number of
+      clusters through merging and splitting. Compared to K-Means, the ISODATA
+      algorithm should be resilient to initial cluster centers. However, ISODATA
+      is also sensitive to initial cluster centers which impacts the performance
+      of the algorithm. This work proposes using the ISODATA approach of splitting
+      clusters to select quality initial cluster centers. The proposed approach is
+      evaluated on several benchmark UCI datasets as well as the Salinas-A
+      hyperspectral image dataset. The results are evaluated using standard
+      clustering evaluation parameters. \\
+      {\bf Keywords :} Clustering, ISODATA, Initial Centroid, Remote Sensing
+\end{abstract}
+
+
+% =========================================================================== %
+
 
 \section{Introduction}
 
-\lettrine[nindent=0em,lines=3]{R} emote sensing technology is used when the data
-collection takes place at a remote distance from the subject matter, such as the
-study of daily weather and long-term climate change, land cover monitoring,
-ecosystem modeling of vegetation, and so on \cite{Jensen1996,Mallapragada2018}.
-Multispectral imaging technology is one of the instruments for remote sensing
-used since the late 1960s \cite{Khan2018,Landgrebe1999}. However, multispectral
-imaging systems use a low number of spectral bands (three to six spectral bands
-in different systems). Increasing spectral resolution in the hyperspectral
-images (HSI) with several hundred spectral bands of the observational scene in a
-single acquisition makes it possible to acquire detailed examination of
-observational scenes \cite{Khan2018}. The ground-based version of hyperspectral
-images has gained immense interest. It has been applied to numerous electronic
-imaging applications, including food inspection, forensic science, medical
-surgery and diagnosis, and military applications
+Remote sensing technology is used when the data collection takes place at a
+remote distance from the subject matter, such as the study of daily weather and
+long-term climate change, land cover monitoring, ecosystem modeling of
+vegetation, and so on \cite{Jensen1996,Mallapragada2018}. Multispectral imaging
+technology is one of the instruments for remote sensing used since the late
+1960s \cite{Khan2018,Landgrebe1999}. However, multispectral imaging systems use
+a low number of spectral bands (three to six spectral bands in different
+systems). Increasing spectral resolution in the hyperspectral images (HSI) with
+several hundred spectral bands of the observational scene in a single
+acquisition makes it possible to acquire detailed examination of observational
+scenes \cite{Khan2018}. The ground-based version of hyperspectral images has
+gained immense interest. It has been applied to numerous electronic imaging
+applications, including food inspection, forensic science, medical surgery and
+diagnosis, and military applications
 \cite{Govender2009,Adam2009,Fischer2006,Carrasco2003}. Because of the difficulty
 of obtaining prior knowledge in remote sensing studies, unsupervised
 classification and cluster analysis have great importance compared to supervised
@@ -160,12 +86,14 @@ results than the K-Means algorithm, but it is not entirely resilient to initial
 cluster centers. In this paper, a novel method using the ISODATA approach of
 splitting clusters to select quality initial cluster centers is proposed.
 
-% The paper is organized as follows: Section 2 introduces K-Means and ISODATA
-% clustering algorithms. The new proposed algorithm is explained in Section 3. We
-% present the experimental results in Section 4. Finally, Section 5 contains
-% concluding remarks.
+The paper is organized as follows: Section 2 introduces K-Means and ISODATA
+clustering algorithms. The new proposed algorithm is explained in Section 3. We
+present the experimental results in Section 4. Finally, Section 5 contains
+concluding remarks.
 
-%------------------------------------------------
+% =========================================================================== %
+
+\section{Background}
 
 \subsection{K-Means Algorithm}
 
@@ -176,14 +104,14 @@ points assigned to other clusters. The user defines $K$, the number of expected
 clusters. Following is a description of the K-Means algorithm:
 
 \begin{itemize}
-  \item \textbf{Step 1:} Choose $K$ cluster centers from the data set.
-  \item \textbf{Step 2:} Assign each element of the data set to the cluster based
-        on the minimum distance from the cluster center.
-  \item \textbf{Step 3:} Re-calculate new cluster centers for each cluster after
-        the assignment in \textbf{Step 2} by computing the mean of all patterns
-        assigned to each cluster.
-  \item \textbf{Step 4:} Repeat \textbf{Step 2 and Step 3} until clustering
-        convergence occurs, or the set number of iterations is exceeded.
+      \item \textbf{Step 1:} Choose $K$ cluster centers from the data set.
+      \item \textbf{Step 2:} Assign each element of the data set to the cluster
+            based on the minimum distance from the cluster center.
+      \item \textbf{Step 3:} Re-calculate new cluster centers for each cluster
+            after the assignment in \textbf{Step 2} by computing the mean of all
+            patterns assigned to each cluster.
+      \item \textbf{Step 4:} Repeat \textbf{Step 2 and Step 3} until clustering
+            convergence occurs, or the set number of iterations is exceeded.
 \end{itemize}
 
 For selecting the initial cluster centers in \textbf{Step 1}, there are two
@@ -195,8 +123,6 @@ where the probability of a sample being chosen as a cluster center is the
 distance of the sample from previously chosen centers [CITE]. The K-Means
 algorithm is susceptible to initial starting cluster centers, where different
 initial values can result in a different classification.
-
-%------------------------------------------------
 
 \subsection{ISODATA Algorithm}
 
@@ -212,35 +138,35 @@ splitting clusters that meet certain parameters. There are three main ISODATA
 parameters:
 
 \begin{itemize}
-  \item $\theta n$ - minimum number of cluster members, which determines whether
-        the cluster is discarded,
-  \item $\theta e$ - maximum standard deviation allowed for a cluster, which
-        determines whether the cluster is split,
-  \item $\theta c$ - minimum distance between clusters, which determines whether
-        two clusters are merged.
+      \item $\theta n$ - minimum number of cluster members, which determines
+            whether the cluster is discarded,
+      \item $\theta e$ - maximum standard deviation allowed for a cluster, which
+            determines whether the cluster is split,
+      \item $\theta c$ - minimum distance between clusters, which determines
+            whether two clusters are merged.
 \end{itemize}
 
 Additionally, the user must set $K$, the maximum number of clusters to generate.
 The ISODATA algorithm is briefly explained below:
 
 \begin{itemize}
-  \item \textbf{Step 1:} Choose $K$ cluster centers from the data set.
-  \item \textbf{Step 2:} Assign each element of the dataset to the cluster based
-        on the minimum distance from the cluster center.
-  \item \textbf{Step 3:} Re-calculate new cluster centers for each cluster by
-        computing the mean of all patterns assigned to each cluster.
-  \item \textbf{Step 4:} Discard clusters that have fewer than ($\theta n$)
-        members. If any clusters were discarded, move to \textbf{Step 7}.
-  \item \textbf{Step 5:} If this iteration is an odd numbered iteration or the
-        number of clusters is less than or equal to  $1/2 * K$, then split clusters
-        which have a standard deviation in a dimension greater than ($\theta e$). Move
-        to \textbf{Step 7}.
-  \item \textbf{Step 6:} If this iteration is an even numbered iteration or the
-        number of clusters is greater than or equal to $2 * K$, then merge clusters which
-        have an intercluster distance less than ($\theta c$).
-  \item \textbf{Step 7:} If this is not the last iteration, start the process
-        again at step 2. If this is the last iteration or clustering convergence occurs,
-        then end the process.
+      \item \textbf{Step 1:} Choose $K$ cluster centers from the data set.
+      \item \textbf{Step 2:} Assign each element of the dataset to the cluster
+            based on the minimum distance from the cluster center.
+      \item \textbf{Step 3:} Re-calculate new cluster centers for each cluster by
+            computing the mean of all patterns assigned to each cluster.
+      \item \textbf{Step 4:} Discard clusters that have fewer than ($\theta n$)
+            members. If any clusters were discarded, move to \textbf{Step 7}.
+      \item \textbf{Step 5:} If this iteration is an odd numbered iteration or the
+            number of clusters is less than or equal to  $1/2 * K$, then split
+            clusters which have a standard deviation in a dimension greater than
+            ($\theta e$). Move to \textbf{Step 7}.
+      \item \textbf{Step 6:} If this iteration is an even numbered iteration or
+            the number of clusters is greater than or equal to $2 * K$, then merge
+            clusters which have an intercluster distance less than ($\theta c$).
+      \item \textbf{Step 7:} If this is not the last iteration, start the process
+            again at step 2. If this is the last iteration or clustering
+            convergence occurs, then end the process.
 \end{itemize}
 
 There are some disadvantages to the ISODATA algorithm. First, ISODATA is
@@ -252,7 +178,7 @@ processes of discarding, splitting, and merging. The initial centroids can
 affect both the quality of clusters produced and the number of iterations
 required to converge [CITE].
 
-%------------------------------------------------
+% =========================================================================== %
 
 \section{Proposed Method}
 
@@ -273,18 +199,19 @@ the fewest members are discarded one at a time, and the assignments and centers
 are updated after each rejection. The algorithm is outlined below:
 
 \begin{itemize}
-  \item \textbf{Step 1:} Choose $1$ observation as a cluster center from the dataset.
-  \item \textbf{Step 2:} Assign each element of the dataset to the cluster based
-        on the minimum distance from the cluster center.
-  \item \textbf{Step 3:} Re-calculate new cluster centers for each cluster by
-        computing the mean of all patterns assigned to each cluster.
-  \item \textbf{Step 4:} If the number of clusters is equal to $K$, then the
-        process is terminated. If the number of clusters is greater than $K$, then the
-        clusters with the fewest members is discarded, and the algorithm moves to
-        \textbf{Step 2}.
-  \item \textbf{Step 5:} Calculate the standard deviation of each cluster in each
-        dimension. Then, split each cluster along the dimension with the greatest
-        standard deviation.
+      \item \textbf{Step 1:} Choose $1$ observation as a cluster center from the
+            dataset.
+      \item \textbf{Step 2:} Assign each element of the dataset to the cluster
+            based on the minimum distance from the cluster center.
+      \item \textbf{Step 3:} Re-calculate new cluster centers for each cluster by
+            computing the mean of all patterns assigned to each cluster.
+      \item \textbf{Step 4:} If the number of clusters is equal to $K$, then the
+            process is terminated. If the number of clusters is greater than $K$,
+            then the clusters with the fewest members is discarded, and the
+            algorithm moves to \textbf{Step 2}.
+      \item \textbf{Step 5:} Calculate the standard deviation of each cluster in
+            each dimension. Then, split each cluster along the dimension with the
+            greatest standard deviation.
 \end{itemize}
 
 This method began as a modified ISODATA process. However, the modification was
@@ -294,7 +221,8 @@ generating initial cluster centers, this approach guarantees variance between
 clusters. As a result, ISODS can be used to generate clusters for other
 clustering algorithms, such as K-Means.
 
-%------------------------------------------------
+% =========================================================================== %
+
 \section{Results}
 
 Due to the response of the ISODATA algorithm to the discarding, merging, and
@@ -321,30 +249,27 @@ external cluster validation measures are used. We utilize pair-counting measures
 which rely on counting matching pairs between two sets of data to determine
 agreement and disagreement \cite{Rezaei2016}. The pair-counting measures applied
 are \textit{rand index} (RI - agreement probability), \textit{adjusted rand
-  index} (ARI), \textit{mirkin's index} (MI - disagreement probability), and
-\textit{hubert's index} (HI - $P(agree) - P(disagree)$)\cite{Hubert1985}
-\cite{Meila2003}.
+      index} (ARI), \textit{mirkin's index} (MI - disagreement probability), and
+\textit{hubert's index} (HI - $P(agree) - P(disagree)$)\cite{Hubert1985,
+      Meila2003}.
 
-
-%------------------------------------------------
+% =========================================================================== %
 
 \section{Conclusion}
+Put Conclusion here.
 
-\subsection{Subsection One}
+% =========================================================================== %
 
-\blindtext % Dummy text
+\subsection*{Acknowledgements}
+Put Acknowledgements here.
 
-\subsection{Subsection Two}
+\vspace{5mm}
 
-\blindtext % Dummy text
-
-%----------------------------------------------------------------------------------------
-%	REFERENCE LIST
-%----------------------------------------------------------------------------------------
+\begin{center}
+      {\large \bf References}
+\end{center}
 
 \bibliographystyle{unsrt}
 \bibliography{paper}
-
-%----------------------------------------------------------------------------------------
 
 \end{document}
