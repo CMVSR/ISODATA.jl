@@ -1,5 +1,5 @@
 
-\documentclass[a4paper,10pt]{article}
+\documentclass[a4paper, 10pt]{article}
 \usepackage{graphicx}
 \usepackage{caption}
 \usepackage{subcaption}
@@ -23,15 +23,20 @@
 \begin{abstract}
       \noindent 
       Iterative Self-Organizing Data Analysis Technique (ISODATA) is a
-      clustering algorithm based on K-Means that intends to find the correct
-      number of clusters through merging and splitting. Compared to K-Means, the
-      ISODATA algorithm should be resilient to initial cluster centers. However,
-      ISODATA is also sensitive to initial cluster centers which impacts the
-      performance of the algorithm. This work proposes using the ISODATA
-      approach of splitting clusters to select quality initial cluster centers.
-      The proposed approach is evaluated on several benchmark UCI datasets as
-      well as the Salinas-A hyperspectral image dataset. The results are
-      evaluated using standard clustering evaluation parameters. \\
+      clustering algorithm based on the K-Means algorithm that intends to find
+      the correct number of clusters through merging and splitting. It is
+      difficult to determine the correct number of clusters in many real-world
+      applications, in particular, remote sensing image interpretation. Compared
+      to K-Means, the ISODATA algorithm should be resilient to initial cluster
+      centers. However, ISODATA is also sensitive to initial cluster centers
+      which impacts the performance of the algorithm. This work proposes using
+      the ISODATA approach of splitting clusters to select quality initial
+      cluster centers, called Iterative Self-Organizing Data Split (ISODS). The
+      proposed approach is evaluated on several benchmark UCI datasets as well
+      as the Salinas-A hyperspectral image dataset. The results are evaluated
+      using standard clustering evaluation parameters. When ISODS is used
+      together with ISODATA, the performance is improved and the generated
+      clusters more closely resemble the expected number of clusters.\\
       {\bf Keywords :} Clustering, ISODATA, Initial Centroids, Remote Sensing
 \end{abstract}
 
@@ -71,12 +76,12 @@ cluster analysis \cite{Xu2015}. In the clustering method, unlabeled and unsorted
 data points are grouped and segmented according to similarities and differences
 to find structure in the inputs, group it into meaningful clusters, and
 understand the data set better. There are different algorithms for Clustering,
-such as K-Means, fuzzy C-Means, ISODATA \cite{Ball1965}, and so on. In the
-K-Means algorithm, the goal is to minimize the sum of the squared distances
-points have in the data set from its center. The problem with the K-Means
-algorithm is that it requires a priori knowledge about the number of classes in
-the data set, and choosing the cluster centers randomly may not result in
-optimal partitioning of the data set.
+such as K-Means \cite{Lloyd1982,Macqueen1967}, fuzzy C-Means, ISODATA
+\cite{Ball1965}, and so on. In the K-Means algorithm, the goal is to minimize
+the sum of the squared distances points have in the data set from its center.
+The problem with the K-Means algorithm is that it requires a priori knowledge
+about the number of classes in the data set, and choosing the cluster centers
+randomly may not result in optimal partitioning of the data set.
 
 One of the most popular clustering algorithms is called ISODATA clustering,
 based on the K-means algorithm with some variations. The ISODATA method's
@@ -99,10 +104,11 @@ concluding remarks.
 \subsection{K-Means Algorithm}
 
 The K-Means algorithm is an unsupervised clustering algorithm and aims to
-partition $N$ observations into $K$ clusters [CITE]. Data points in the same
-cluster are very similar to each other and have less variation compared to data
-points assigned to other clusters. The user defines $K$, the number of expected
-clusters. Following is a description of the K-Means algorithm:
+partition $N$ observations into $K$ clusters \cite{Lloyd1982,Macqueen1967}. Data
+points in the same cluster are very similar to each other and have less
+variation compared to data points assigned to other clusters. The user defines
+$K$, the number of expected clusters. Following is a description of the K-Means
+algorithm:
 
 \begin{itemize}
       \item \textbf{Step 1:} Choose $K$ cluster centers from the data set.
@@ -116,19 +122,22 @@ clusters. Following is a description of the K-Means algorithm:
 \end{itemize}
 
 For selecting the initial cluster centers in \textbf{Step 1}, there are two
-standard methods: Random Centers, and K-Means++ [CITE]. In Random Centers, $K$
-samples are randomly chosen from the dataset to serve as the initial cluster
-centers. In K-Means++, $1$ sample is randomly chosen from the dataset to serve
-as the initial cluster center. Then, $K-1$ samples are iteratively selected,
-where the probability of a sample being chosen as a cluster center is the
-distance of the sample from previously chosen centers [CITE]. The K-Means
-algorithm is susceptible to initial starting cluster centers, where different
-initial values can result in a different classification.
+standard methods: Random Centers, and K-Means++ \cite{Arthur2007}. In Random
+Centers, $K$ samples are randomly chosen from the dataset to serve as the
+initial cluster centers. In K-Means++, $1$ sample is randomly chosen from the
+dataset to serve as the initial cluster center. Then, $K-1$ samples are
+iteratively selected, where the probability of a sample being chosen as a
+cluster center is the distance of the sample from previously chosen centers
+\cite{Arthur2007}. The K-Means algorithm is susceptible to initial starting
+cluster centers, where different initial values can result in a different
+classification \cite{Franti2018}.
+
+
 
 \subsection{ISODATA Algorithm}
 
 ISODATA is another frequently used clustering algorithm and is based on the
-K-Means algorithm. Like K-Means, cluster centers are iteratively updated and
+K-Means algorithm \cite{Ball1965}. Like K-Means, cluster centers are iteratively updated and
 reassigned to the samples in the dataset. However, ISODATA determines the number
 of clusters dynamically and allows for a different number of cluster centers. In
 contrast, the K-Means algorithm requires a fixed user-set parameter of the
@@ -178,7 +187,7 @@ being tested. In addition, similar to K-Means, it is sensitive to initial
 cluster centers, although less so than K-Means due to the extra processes of
 discarding, splitting, and merging. The initial centroids can affect both the
 quality of clusters produced and the number of iterations required to converge
-      [CITE].
+\cite{Franti2018}.
 
 % =========================================================================== %
 
@@ -203,7 +212,7 @@ the fewest members are discarded one at a time, and the assignments and centers
 are updated after each rejection. The algorithm is outlined below:
 
 \begin{itemize}
-      \item \textbf{Step 1:} Choose $1$ observation as a cluster center from the
+      \item \textbf{Step 1:} Choose one observation as a cluster center from the
             dataset.
       \item \textbf{Step 2:} Assign each element of the dataset to the cluster
             based on the minimum distance from the cluster center.
@@ -215,7 +224,7 @@ are updated after each rejection. The algorithm is outlined below:
             algorithm moves to \textbf{Step 2}.
       \item \textbf{Step 5:} Calculate the standard deviation of each cluster in
             each dimension. Then, split each cluster along the dimension with
-            the greatest standard deviation.
+            the greatest standard deviation and move to \textbf{Step 2}.
 \end{itemize}
 
 This method began as a modified ISODATA process. However, the modification was
@@ -226,55 +235,6 @@ clusters. As a result, ISODS can be used to generate clusters for other
 clustering algorithms, such as K-Means.
 
 % =========================================================================== %
-
-\begin{table}[ht]
-      \begin{tabular}{ |p{1.25cm}||p{1.25cm} p{1.25cm} p{1.25cm} p{1.25cm} p{1.25cm} p{1.25cm}|}
-            \hline
-            \multicolumn{7}{|c|}{\textbf{ISODATA}}                               \\
-            \hline
-            Init. & Iter.  & Clusters & ARI             & RI    & MI    & HI     \\
-            \hline
-            \multicolumn{7}{|c|}{\textit{Iris}}                                  \\[1ex]
-            ISODS & 13.46  & 2.599    & \textbf{0.646}  & 0.826 & 0.173 & 0.653  \\
-            KM++  & 15.43  & 2.544    & 0.628           & 0.816 & 0.184 & 0.631  \\
-            Rand  & 11.90  & 2.41     & 0.607           & 0.802 & 0.198 & 0.604  \\
-            \hline
-            \multicolumn{7}{|c|}{\textit{Glass (Normalized)}}                    \\[1ex]
-            ISODS & 3.19   & 1.066    & \textbf{0.0018} & 0.266 & 0.734 & -0.468 \\
-            KM++  & 4.02   & 1.028    & 0.0011          & 0.265 & 0.735 & -0.470 \\
-            Rand  & 3.69   & 1.055    & 0.0013          & 0.266 & 0.733 & -0.467 \\
-            \hline
-            \multicolumn{7}{|c|}{\textit{Wine}}                                  \\[1ex]
-            ISODS & 9.16   & 1.836    & \textbf{0.313}  & 0.618 & 0.382 & 0.236  \\
-            KM++  & 8.76   & 1.816    & 0.307           & 0.612 & 0.388 & 0.224  \\
-            Rand  & 9.26   & 1.810    & 0.304           & 0.608 & 0.391 & 0.217  \\
-            \hline 
-            \multicolumn{7}{|c|}{\textbf{K-Means}}                               \\
-            \hline
-            \multicolumn{7}{|c|}{\textit{Iris}}                                  \\[1ex]
-            ISODS & 2.29   & 3        & \textbf{0.623}  & 0.833 & 0.167 & 0.667  \\
-            KM++  & 4.149  & 3        & 0.584           & 0.811 & 0.189 & 0.621  \\
-            Rand  & 29.402 & 3        & 0.569           & 0.797 & 0.203 & 0.593  \\
-            \hline
-            \multicolumn{7}{|c|}{\textit{Glass (Normalized)}}                    \\[1ex]
-            ISODS & 5.651  & 6        & 0.164           & 0.665 & 0.335 & 0.329  \\
-            KM++  & 4.866  & 6        & \textbf{0.173}  & 0.643 & 0.357 & 0.285  \\
-            Rand  & 77.178 & 6        & 0.151           & 0.634 & 0.366 & 0.268  \\
-            \hline
-            \multicolumn{7}{|c|}{\textit{Wine}}                                  \\[1ex]
-            ISODS & 3.145  & 3        & \textbf{0.882}  & 0.947 & 0.053 & 0.895  \\
-            KM++  & 5.388  & 3        & 0.839           & 0.926 & 0.074 & 0.851  \\
-            Rand  & 24.775 & 3        & 0.834           & 0.920 & 0.080 & 0.840  \\
-            \hline
-      \end{tabular}
-      \caption{UCI benchmark dataset results averaged over 1000 iterations of
-            ISODATA and K-Means comparing three different initial cluster center
-            algorithms (\textit{Init.}). Results in the table contain
-            information on average iterations required (\textit{Iter.}), average
-            number of clusters created (\textit{Clusters}), and validity
-            measures.}
-      \label{tab:ucitable}
-\end{table}
 
 \section{Results}
 
@@ -311,44 +271,72 @@ labels contained in the test data using pair-counting measures.
 To evaluate the cluster results, external cluster validation measures are used.
 We utilize pair-counting measures which rely on counting matching pairs between
 two sets of data to determine agreement and disagreement \cite{Rezaei2016}. The
-pair-counting measures applied are \textit{rand index} (RI - agreement
-probability), \textit{adjusted rand index} (ARI), \textit{mirkin's index} (MI -
-disagreement probability), and \textit{hubert's index} (HI - $(P(agree)$ -
+pair-counting measures applied are \textit{Rand index} (RI - agreement
+probability), \textit{adjusted Rand index} (ARI), \textit{Mirkin's index} (MI -
+disagreement probability), and \textit{Hubert's index} (HI - $(P(agree)$ -
 $P(disagree))$) \cite{Hubert1985, Meila2003}. When comparing ground truth labels
 to cluster assignments, RI can serve as an estimation of the accuracy. ARI is
 similar to the RI, though it is corrected for chance and thus does not count
 randomly generated labels \cite{Rand1971}.
 
-\begin{figure}[ht]
-      \centering
-      \begin{subfigure}[b]{0.4\textwidth}
-            \centering
-            \includegraphics[width=\linewidth]{salinasgt.png}
-            \caption{Salinas-A Ground Truth}
-            \label{fig:salinasgt}
-      \end{subfigure}
-      \begin{subfigure}[b]{0.4\textwidth}
-            \centering
-            \includegraphics[width=\linewidth]{risodata.png}
-            \caption{Random Centers (ARI=0.797)}
-            \label{fig:salinasr}
-      \end{subfigure}\hfill
-      \centering
-      \begin{subfigure}[b]{0.4\textwidth}
-            \centering
-            \includegraphics[width=\linewidth]{kisodata.png}
-            \caption{KM++ Centers (ARI=0.781)}
-            \label{fig:salinask}
-      \end{subfigure}
-      \begin{subfigure}[b]{0.4\textwidth}
-            \centering
-            \includegraphics[width=\linewidth]{iisodata.png}
-            \caption{ISODS Centers (ARI=0.758)}
-            \label{fig:salinasi}
-      \end{subfigure}\hfill \caption{Heatmap showing cluster assignments of each
-            pixel using ISODATA with different initial cluster center methods.}
-      \label{fig:salinas}
-\end{figure}
+The ISODATA algorithm does not have a determined number of clusters to generate.
+Instead, the user sets the max clusters desired, and the algorithm will generate
+a number of clusters between and the max and half the max number desired. Since
+the output depends on the data, the ISODATA parameters, and the initial centers,
+we include a column to depict the average number of clusters.
+
+\begin{table}[ht]
+      \caption{UCI benchmark dataset results averaged over 1000 iterations of
+            ISODATA comparing three different initial cluster center algorithms
+            (\textit{Init.}). ARI - adjusted Rand index; RI - Rand index; MI -
+            Mirkin's index; HI - Hubert's index.}
+      \begin{tabular}{ |p{1.25cm}||p{1.25cm} p{1.25cm} p{1.25cm} p{1.25cm} p{1.25cm} p{1.25cm}|}
+            \hline
+            \multicolumn{7}{|c|}{\textbf{ISODATA}}                               \\
+            \hline
+            Init. & Iter.  & Clusters & ARI             & RI    & MI    & HI     \\
+            \hline
+            \multicolumn{7}{|c|}{\textit{Iris}}                                  \\
+            \hline
+            ISODS & 13.46  & 2.599    & \textbf{0.646}  & 0.826 & 0.173 & 0.653  \\
+            KM++  & 15.43  & 2.544    & 0.628           & 0.816 & 0.184 & 0.631  \\
+            Rand  & 11.90  & 2.41     & 0.607           & 0.802 & 0.198 & 0.604  \\
+            \hline
+            \multicolumn{7}{|c|}{\textit{Glass (Normalized)}}                    \\
+            \hline
+            ISODS & 3.19   & 1.066    & \textbf{0.0018} & 0.266 & 0.734 & -0.468 \\
+            KM++  & 4.02   & 1.028    & 0.0011          & 0.265 & 0.735 & -0.470 \\
+            Rand  & 3.69   & 1.055    & 0.0013          & 0.266 & 0.733 & -0.467 \\
+            \hline
+            \multicolumn{7}{|c|}{\textit{Wine}}                                  \\
+            \hline
+            ISODS & 9.16   & 1.836    & \textbf{0.313}  & 0.618 & 0.382 & 0.236  \\
+            KM++  & 8.76   & 1.816    & 0.307           & 0.612 & 0.388 & 0.224  \\
+            Rand  & 9.26   & 1.810    & 0.304           & 0.608 & 0.391 & 0.217  \\
+            \hline 
+            \multicolumn{7}{|c|}{\textbf{K-Means}}                               \\
+            \hline
+            \multicolumn{7}{|c|}{\textit{Iris}}                                  \\
+            \hline
+            ISODS & 2.29   & 3        & \textbf{0.623}  & 0.833 & 0.167 & 0.667  \\
+            KM++  & 4.149  & 3        & 0.584           & 0.811 & 0.189 & 0.621  \\
+            Rand  & 29.402 & 3        & 0.569           & 0.797 & 0.203 & 0.593  \\
+            \hline
+            \multicolumn{7}{|c|}{\textit{Glass (Normalized)}}                    \\
+            \hline
+            ISODS & 5.651  & 6        & 0.164           & 0.665 & 0.335 & 0.329  \\
+            KM++  & 4.866  & 6        & \textbf{0.173}  & 0.643 & 0.357 & 0.285  \\
+            Rand  & 77.178 & 6        & 0.151           & 0.634 & 0.366 & 0.268  \\
+            \hline
+            \multicolumn{7}{|c|}{\textit{Wine}}                                  \\
+            \hline
+            ISODS & 3.145  & 3        & \textbf{0.882}  & 0.947 & 0.053 & 0.895  \\
+            KM++  & 5.388  & 3        & 0.839           & 0.926 & 0.074 & 0.851  \\
+            Rand  & 24.775 & 3        & 0.834           & 0.920 & 0.080 & 0.840  \\
+            \hline
+      \end{tabular}
+      \label{tab:ucitable}
+\end{table}
 
 Following the results on the benchmark datasets, we applied ISODATA to the
 Salinas-A hyperspectral image dataset \cite{Salinas}. Salinas-A is a small
@@ -367,44 +355,74 @@ pictures shown in Figure \ref{fig:salinas}. Finally, the external cluster
 validation measures are shown in Table \ref{tab:salinastable}. 
 
 \begin{table}[ht]
+      \caption{Salinas-A dataset average and best results over 1000 iterations
+            of ISODATA comparing three different initial cluster center
+            algorithms (\textit{Init.}).}
       \begin{tabular}{ |p{1.25cm}||p{1.25cm} p{1.25cm} p{1.25cm} p{1.25cm} p{1.25cm} p{1.25cm}|}
             \hline
             \multicolumn{7}{|c|}{\textbf{ISODATA} - \textit{Salinas-A}}        \\
             \hline
             Init. & Iter. & Clusters & ARI            & RI    & MI    & HI     \\
             \hline
-            \multicolumn{7}{|c|}{\textit{Average}}                             \\[1ex]
+            \multicolumn{7}{|c|}{\textit{Average}}                             \\
+            \hline
             ISODS & 2.772 & 2.42     & \textbf{0.156} & 0.388 & 0.612 & -0.224 \\
             KM++  & 3.177 & 1.097    & 0.019          & 0.228 & 0.772 & -0.544 \\
             Rand  & 3.693 & 1.584    & 0.084          & 0.308 & 0.691 & -0.383 \\
             \hline
-            \multicolumn{7}{|c|}{\textit{Best}}                                \\[1ex]
+            \multicolumn{7}{|c|}{\textit{Best}}                                \\
+            \hline
             ISODS & 2     & 6        & 0.758          & 0.921 & 0.078 & 0.842  \\
             KM++  & 8     & 6        & 0.781          & 0.930 & 0.070 & 0.860  \\
             Rand  & 14    & 6        & \textbf{0.798} & 0.933 & 0.066 & 0.867  \\
             \hline
       \end{tabular}
-      \caption{Salinas-A dataset average and best results over 1000 iterations
-            of ISODATA comparing three different initial cluster center
-            algorithms (\textit{Init.}). Results in the table contain
-            information on iterations required (\textit{Iter.}), number of
-            clusters created (\textit{Clusters}), and validity measures.}
       \label{tab:salinastable}
 \end{table}
+
+\begin{figure}[ht]
+      \centering
+      \begin{subfigure}[b]{0.24\textwidth}
+            \centering
+            \includegraphics[width=\linewidth]{salinasgt.png}
+            \label{fig:salinasgt}
+      \end{subfigure}
+      \begin{subfigure}[b]{0.24\textwidth}
+            \centering
+            \includegraphics[width=\linewidth]{risodata.png}
+            \label{fig:salinasr}
+      \end{subfigure}
+      \centering
+      \begin{subfigure}[b]{0.24\textwidth}
+            \centering
+            \includegraphics[width=\linewidth]{kisodata.png}
+            \label{fig:salinask}
+      \end{subfigure}
+      \begin{subfigure}[b]{0.24\textwidth}
+            \centering
+            \includegraphics[width=\linewidth]{iisodata.png}
+            \label{fig:salinasi}
+      \end{subfigure}\hfill \caption{Heatmap showing cluster assignments of each
+            pixel using ISODATA with different initial cluster center methods.
+            (a) Salinas-A Ground Truth; (b) Random Centers (ARI=0.797); KM++
+            Centers (ARI=0.781); ISODS Centers (ARI=0.758).}
+      \label{fig:salinas}
+\end{figure}
 
 % =========================================================================== %
 
 \section{Conclusion}
 This study presents a method for generating initial cluster centers based on a
-splitting approach, ISODS. We tested ISODS on bechmark datasets as well as the
-Salinas-A hyperspectral image dataset. Both tests on average shows the
-performance of ISODS using external cluster validation measures, especially on
-the \textit{adjusted rand index} measure. Additonally, ISODS may decrease the
-number of iterations required for a clustering algorithm such as ISODATA or
-K-Means to converge. However, due to the complexity of the ISODS approach,
-specifically calculating the means of the clusters, the number of iterations
-taken by ISODS should be considered. When used in conjunction with ISODATA,
-ISODS also shows an average number of clusters generated closer to the expected
+splitting approach, Iterative Self-Organizing Data Split (ISODS). We tested ISODS on
+bechmark datasets as well as the Salinas-A hyperspectral image dataset. Both
+tests on average shows the performance of ISODS using external cluster
+validation measures, especially on the \textit{adjusted Rand index} measure.
+Additonally, ISODS may decrease the number of iterations required for a
+clustering algorithm such as ISODATA or K-Means to converge. However, due to the
+complexity of the ISODS approach compared to other initial centroid algorithms,
+specifically calculating the means of the clusters, the context should be
+considered when applying this method. When used in conjunction with ISODATA,
+ISODS shows an average number of clusters generated closer to the expected
 output.
 
 % =========================================================================== %
