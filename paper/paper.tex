@@ -3,20 +3,25 @@
 \usepackage{graphicx}
 \usepackage{caption}
 \usepackage{subcaption}
+\usepackage[hidelinks]{hyperref}
 
 \graphicspath{ {./img/} }
 \begin{document}
 
 \title{\bf ISODS: An ISODATA-Based Initial Centroid Algorithm}
-\author{Noah Gardner$^1$, Sahar Yarmohammadtoosky$^2$, \\
-      Anthony Phan$^3$, and Chih-Cheng Hung$^4$\\[1ex]
+\author{
+      Noah Gardner$^1$,
+      Sahar Yarmohammadtoosky$^2$, \\
+      Anthony Phan$^3$,
+      and Chih-Cheng Hung$^4$\\[1ex]
       \sl \small Kennesaw State University, Marietta, GA, USA$^{1, 3, 4}$\\
       \sl \small Iran University of Science and Technology, Tehran,
       Iran$^2$\\[1ex]
-      \small $^1$ngardn10@students.kennesaw.edu, \small
-      $^2$yarmohamadishr@gmail.com, \\
-      \small $^3$aphan5@students.kennesaw.edu, \small $^4$chung1@kennesaw.edu,
-      \\}
+      \small \href{mailto:ngardn10@students.kennesaw.edu}{$^1$ngardn10@students.kennesaw.edu},
+      \small \href{mailto:yarmohamadishr@gmail.com}{$^2$yarmohamadishr@gmail.com}, \\
+      \small \href{mailto:aphan5@students.kennesaw.edu}{$^3$aphan5@students.kennesaw.edu},
+      \small \href{mailto:chung1@kennesaw.edu}{$^4$chung1@kennesaw.edu} \\
+}
 \date{}
 \maketitle
 
@@ -230,7 +235,7 @@ are updated after each rejection. The algorithm is outlined below:
 This method began as a modified ISODATA process. However, the modification was
 unique in that there is a clear distinction from the proposed change and the
 beginning of the original process. Although more complex than other methods of
-generating initial cluster centers, this approach guarantees variance between
+generating initial cluster centers, this approach guarantees separation between
 clusters. As a result, ISODS can be used to generate clusters for other
 clustering algorithms, such as K-Means.
 
@@ -357,7 +362,8 @@ validation measures are shown in Table \ref{tab:salinastable}.
 \begin{table}[ht]
       \caption{Salinas-A dataset average and best results over 1000 iterations
             of ISODATA comparing three different initial cluster center
-            algorithms (\textit{Init.}).}
+            algorithms (\textit{Init.}). ARI - adjusted Rand index; RI - Rand
+            index; MI - Mirkin's index; HI - Hubert's index.}
       \begin{tabular}{ |p{1.25cm}||p{1.25cm} p{1.25cm} p{1.25cm} p{1.25cm} p{1.25cm} p{1.25cm}|}
             \hline
             \multicolumn{7}{|c|}{\textbf{ISODATA} - \textit{Salinas-A}}        \\
@@ -385,26 +391,30 @@ validation measures are shown in Table \ref{tab:salinastable}.
       \begin{subfigure}[b]{0.24\textwidth}
             \centering
             \includegraphics[width=\linewidth]{salinasgt.png}
+            \caption{}
             \label{fig:salinasgt}
       \end{subfigure}
       \begin{subfigure}[b]{0.24\textwidth}
             \centering
             \includegraphics[width=\linewidth]{risodata.png}
+            \caption{}
             \label{fig:salinasr}
       \end{subfigure}
       \centering
       \begin{subfigure}[b]{0.24\textwidth}
             \centering
             \includegraphics[width=\linewidth]{kisodata.png}
+            \caption{}
             \label{fig:salinask}
       \end{subfigure}
       \begin{subfigure}[b]{0.24\textwidth}
             \centering
             \includegraphics[width=\linewidth]{iisodata.png}
+            \caption{}
             \label{fig:salinasi}
       \end{subfigure}\hfill \caption{Heatmap showing cluster assignments of each
             pixel using ISODATA with different initial cluster center methods.
-            (a) Salinas-A Ground Truth; (b) Random Centers (ARI=0.797); KM++
+            (a) Salinas-A Ground Truth; (b) Random Centers (ARI=0.798); KM++
             Centers (ARI=0.781); ISODS Centers (ARI=0.758).}
       \label{fig:salinas}
 \end{figure}
